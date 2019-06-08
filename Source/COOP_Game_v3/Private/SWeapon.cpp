@@ -2,7 +2,8 @@
 
 
 #include "..\Public\SWeapon.h"
-
+#include "DrawDebugHelpers.h"
+#include "..\Public\SCharacter.h"
 // Sets default values
 ASWeapon::ASWeapon()
 {
@@ -21,6 +22,35 @@ void ASWeapon::BeginPlay()
 	
 }
 
+
+void ASWeapon::Fire()
+{
+	//Trace the world, from pawn eyes to crosshair location
+	AActor* MyOwner = GetOwner();
+	if (MyOwner) {
+
+		FVector EyeLocation;
+		FRotator EyeRotation;
+		
+
+		MyOwner->GetActorEyesViewPoint(EyeLocation,EyeRotation);
+		FHitResult Hit;
+		FVector TraceEnd = EyeLocation+ (EyeRotation.Vector()*10000);
+
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(MyOwner);
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.bTraceComplex = true;
+
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams)) {
+			//Blocked hit
+		}
+
+		DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+	}
+
+	
+}
 
 // Called every frame
 void ASWeapon::Tick(float DeltaTime)
