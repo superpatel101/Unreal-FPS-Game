@@ -20,13 +20,13 @@ protected:
 	void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
-	float PowerupInterval;
+	float IntervalBetweenTicks;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
-	int32 TotalTicks;
+	int32 TotalNumberOfTicks;
 
 	//Total # of ticks applied
-	int32 TicksDone;
+	int32 TicksCompleted;
 
 	FTimerHandle TimerHandle_PowerupTick;
 
@@ -42,18 +42,20 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
 	void OnPowerupStateChange(bool bNewIsActive);
 
-public:
+	AActor* TargetActor;
 
-	void ActivatePowerup();
+public:
+	
+	void ActivatePowerup(AActor* OtherActor);
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	void OnPowerupTicked();
+	// UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
+	virtual void OnPowerupTicked(AActor* OtherActor);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	void OnActivated();
+	// UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
+	virtual void OnActivated(AActor* OtherActor);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	void OnExpired();
+	// UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
+	virtual void OnExpired(AActor* OtherActor);
 };
