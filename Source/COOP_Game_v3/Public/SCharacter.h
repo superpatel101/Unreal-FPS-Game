@@ -6,8 +6,11 @@
 #include "GameFramework/Character.h"
 #include "SCharacter.generated.h"
 
+
+
 class UCameraComponent;
 class USpringArmComponent;
+class ASWeapon;
 
 UCLASS()
 class COOP_GAME_V3_API ASCharacter : public ACharacter
@@ -35,6 +38,33 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USpringArmComponent* SpringArmComp;
 
+	bool bWantsToZoom;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	float ZoomedFOV;
+
+	UPROPERTY(EditDefaultsOnly,Category = "Player", meta = (ClampMin = 0.1,ClampMax = 100))
+	float ZoomInterpSpeed;
+	
+	float DefaultFOV;
+
+	void BeginZoom();
+	void EndZoom();
+
+	ASWeapon* CurrentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	TSubclassOf<ASWeapon> StarterWeaponClass;
+
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	FName WeaponAttachSocketName;
+
+	void Fire();
+	
+
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -42,6 +72,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual FVector GetPawnViewPointLocation() const;  
+	virtual FVector GetPawnViewLocation() const override;
 
 };
