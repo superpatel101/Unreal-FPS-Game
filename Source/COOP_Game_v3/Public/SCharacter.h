@@ -4,10 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Public/HealthComponent.h"
+
+
 #include "SCharacter.generated.h"
 
 class UCameraComponent;
 class USpringArmComponent;
+class UHealthComponent;
 
 UCLASS()
 class COOP_GAME_V3_API ASCharacter : public ACharacter
@@ -34,6 +38,14 @@ protected:
 	UCameraComponent* CameraComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USpringArmComponent* SpringArmComp;
+
+	UHealthComponent* HealthComponent;
+
+	UFUNCTION()
+		void OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	UPROPERTY(BlueprintReadOnly, Category = "Player")
+	bool bDied; //Died previously
 
 public:	
 	// Called every frame

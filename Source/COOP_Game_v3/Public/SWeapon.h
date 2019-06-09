@@ -7,7 +7,7 @@
 #include "SWeapon.generated.h"
 
 class USkeletalMeshComponent;
-
+class UDamageType;
 
 
 UCLASS()
@@ -28,6 +28,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable,Category = "Weapon")
 	void Fire();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<UDamageType> DamageType;
 
 public:	
 	// Called every frame
