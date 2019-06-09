@@ -4,12 +4,13 @@
 #include "Public/PowerupActor.h"
 #include "TimerManager.h"
 #include "UnrealNetwork.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 APowerupActor::APowerupActor()
 {
-	PowerupInterval = 0.0f;
-	TotalTicks = 0;
+	IntervalBetweenTicks = 0.0f;
+	TotalNumberOfTicks = 0;
 	SetReplicates(true);
 	bIsPowerupActive = false;
 }
@@ -22,14 +23,29 @@ void APowerupActor::BeginPlay()
 
 void APowerupActor::OnTickPowerup()
 {
-	OnPowerupTicked();
+	OnPowerupTicked(TargetActor);
 
-	TicksDone++;
+	TicksCompleted++;
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TicksCompleted));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TotalNumberOfTicks));
 
-	if (TicksDone >= TotalTicks)
+	if (TicksCompleted > TotalNumberOfTicks)
 	{
-		OnExpired();
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("expired"));
+		OnExpired(TargetActor);
+
+		bIsPowerupActive = false;
+		OnRep_PowerupActive();
 		GetWorldTimerManager().ClearTimer(TimerHandle_PowerupTick);
+
+		if (Role == ROLE_Authority)
+		{
+			Destroy(true);
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("should be deleted...."));
+		} else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("NOT SERVER NOT be deleted...."));
+		}
 	}
 }
 
@@ -38,14 +54,21 @@ void APowerupActor::OnRep_PowerupActive()
 	OnPowerupStateChange(bIsPowerupActive);
 }
 
-void APowerupActor::ActivatePowerup()
+void APowerupActor::ActivatePowerup(AActor* OtherActor)
 {
+	TargetActor = OtherActor;
+	OnActivated(OtherActor);
+
 	bIsPowerupActive = true;
-	OnActivated();
-	if (PowerupInterval > 0.0f)
+	OnRep_PowerupActive();
+	
+	// TimerDelegate.BindUFunction(this, FName("OnTickPowerup"), OtherActor);
+
+	SetActorHiddenInGame(true);
+
+	if (IntervalBetweenTicks > 0.0f)
 	{
-		GetWorldTimerManager().SetTimer(TimerHandle_PowerupTick, this, &APowerupActor::OnTickPowerup, PowerupInterval,
-		                                true);
+		GetWorldTimerManager().SetTimer(TimerHandle_PowerupTick, this, &APowerupActor::OnTickPowerup, IntervalBetweenTicks, true, 0.0f);
 	}
 	else
 	{
@@ -58,4 +81,16 @@ void APowerupActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(APowerupActor, bIsPowerupActive);
+}
+
+void APowerupActor::OnPowerupTicked(AActor* OtherActor)
+{
+}
+
+void APowerupActor::OnActivated(AActor* OtherActor)
+{
+}
+
+void APowerupActor::OnExpired(AActor* OtherActor)
+{
 }
