@@ -5,8 +5,13 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
+
 #include "SWeapon.h"
 
+#include "Components/InputComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Public/HealthComponent.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -20,9 +25,11 @@ ASCharacter::ASCharacter()
 
 	GetMovementComponent()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
+	// GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
 
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
+
 
 	ZoomedFOV = 65.0f;
 	ZoomInterpSpeed = 20;
@@ -31,12 +38,16 @@ ASCharacter::ASCharacter()
 
 
 
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+
+
 }
 
 // Called when the game starts or when spawned
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	DefaultFOV = CameraComp->FieldOfView;
 
 	FActorSpawnParameters SpawnParams;
@@ -52,6 +63,9 @@ void ASCharacter::BeginPlay()
 	}
 
 
+
+
+	HealthComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	
 }
 
@@ -91,6 +105,23 @@ void ASCharacter::Fire()
 		CurrentWeapon->Fire();
 	}
 }
+void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health <= 0.0f && !bDied)
+	{
+		// Die time
+		bDied = true;
+
+		GetMovementComponent()->StopMovementImmediately();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		DetachFromControllerPendingDestroy();
+
+		SetLifeSpan(10.0f);
+
+
+	}
+}
 
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
@@ -102,6 +133,8 @@ void ASCharacter::Tick(float DeltaTime)
 	float NewFOV = FMath::FInterpTo(CameraComp->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
 
 	CameraComp->SetFieldOfView(NewFOV);
+
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(HealthComponent->GetHealth()));
 
 }
 

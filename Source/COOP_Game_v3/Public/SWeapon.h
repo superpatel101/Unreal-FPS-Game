@@ -7,8 +7,10 @@
 #include "SWeapon.generated.h"
 
 class USkeletalMeshComponent;
+
 class DamageType;
 class UParticleSystem;
+class UDamageType;
 
 
 UCLASS()
@@ -28,6 +30,13 @@ protected:
 	
 
 	void PlayFireEffects(FVector TraceEnd);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	TSubclassOf<UDamageType> DamageType;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Weapon")
 	TSubclassOf<UDamageType> DamageType;

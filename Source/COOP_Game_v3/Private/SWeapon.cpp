@@ -6,6 +6,7 @@
 #include "../Public/SCharacter.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+
 #include "Particles/ParticleSystem.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -17,6 +18,7 @@ FAutoConsoleVariableRef CVarDebugWeaponDrawing(
 	DebugWeaponDrawing, 
 	TEXT("Draw Debug Lines For Weapons"), 
 	ECVF_Cheat);
+
 
 // Sets default values
 ASWeapon::ASWeapon()
@@ -43,9 +45,11 @@ void ASWeapon::Fire()
 
 		MyOwner->GetActorEyesViewPoint(EyeLocation,EyeRotation);
 
+
 		FVector ShotDirection = EyeRotation.Vector();
 		
 		FVector TraceEnd = EyeLocation+ (ShotDirection*10000);
+
 
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(MyOwner);
@@ -57,6 +61,7 @@ void ASWeapon::Fire()
 		FHitResult Hit;
 		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams)) {
 			//Blocked hit
+
 			AActor* HitActor = Hit.GetActor();
 			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
 			if (ImpactEffect) {
