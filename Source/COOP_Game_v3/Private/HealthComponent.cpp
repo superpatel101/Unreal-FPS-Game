@@ -56,6 +56,14 @@ float UHealthComponent::GetHealth()
 	return Health;
 }
 
+void UHealthComponent::Heal(float amount)
+{
+	if (amount > 0.f && Health > 0.f)
+	{
+		Health = FMath::Clamp(Health + amount, 0.0f, MaxHealth);
+	}
+}
+
 // Called every frame
 void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

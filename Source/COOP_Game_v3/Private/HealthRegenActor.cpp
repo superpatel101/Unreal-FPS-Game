@@ -23,7 +23,7 @@ void AHealthRegenActor::OnPowerupTicked(AActor* OtherActor)
 
 		if (PlayerHealthComp)
 		{
-		
+			PlayerHealthComp->Heal(regenPerTick);
 		}
 	}
 }
