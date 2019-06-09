@@ -7,7 +7,7 @@
 #include "SProjectileWeapon.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
 class COOP_GAME_V3_API ASProjectileWeapon : public ASWeapon
@@ -18,5 +18,5 @@ protected:
 	virtual void Fire() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "ProjectileWeapon")
-		TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> ProjectileClass;
 };

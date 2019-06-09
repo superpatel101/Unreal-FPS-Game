@@ -31,12 +31,9 @@ protected:
 
 	void PlayFireEffects(FVector TraceEnd);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	TSubclassOf<UDamageType> DamageType;
-
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	// virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Weapon")
 	TSubclassOf<UDamageType> DamageType;
@@ -55,6 +52,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	UParticleSystem* TracerEffect;
+
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")

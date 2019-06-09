@@ -26,8 +26,10 @@ ASWeapon::ASWeapon()
 
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
 	RootComponent = MeshComp;
+	
 	MuzzleSocketName = "MuzzleSocket";
 	TracerTargetName = "Target";
+	
 }
 
 
@@ -35,6 +37,7 @@ ASWeapon::ASWeapon()
 
 void ASWeapon::Fire()
 {
+	
 	//Trace the world, from pawn eyes to crosshair location
 	AActor* MyOwner = GetOwner();
 	if (MyOwner) {
@@ -78,12 +81,6 @@ void ASWeapon::Fire()
 		}
 
 		PlayFireEffects(TracerEndPoint);
-		
-
-		
-		
-		
-
 
 	}
 
@@ -92,6 +89,7 @@ void ASWeapon::Fire()
 
 void ASWeapon::PlayFireEffects(FVector TraceEnd)
 {
+	
 	if (MuzzleEffect) {
 		UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComp, MuzzleSocketName);
 	}
@@ -105,6 +103,6 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
 			TracerComp->SetVectorParameter(TracerTargetName, TraceEnd);
 		}
 	}
-
+	
 }
 

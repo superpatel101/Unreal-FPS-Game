@@ -2,8 +2,6 @@
 
 
 #include "SProjectileWeapon.h"
-#include "SceneOutliner/Private/SceneOutlinerActorInfoColumn.h"
-#include "Engine/Engine.h"
 
 
 void ASProjectileWeapon::Fire() {
@@ -19,7 +17,7 @@ void ASProjectileWeapon::Fire() {
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, EyeRotation, SpawnParams);
+		GetWorld()->SpawnActor<AActor>(ProjectileClass,MuzzleLocation,EyeRotation,SpawnParams);
 
 
 	}
