@@ -12,6 +12,7 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "UnrealNetwork.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "COOP_Game_v3.h"
 
 
 static int32 DebugWeaponDrawing = 0;
@@ -77,7 +78,7 @@ void ASWeapon::Fire()
 		EPhysicalSurface SurfaceType = SurfaceType_Default;
 
 		FHitResult Hit;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams))
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
 		{
 			//Blocked hit
 
