@@ -29,6 +29,8 @@ ASWeapon::ASWeapon()
 	
 	MuzzleSocketName = "MuzzleSocket";
 	TracerTargetName = "Target";
+
+	SetReplicates(true);
 	
 }
 

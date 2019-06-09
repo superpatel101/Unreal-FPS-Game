@@ -2,7 +2,6 @@
 
 
 #include "SProjectileWeapon.h"
-#include "SceneOutliner/Private/SceneOutlinerActorInfoColumn.h"
 #include "Engine/Engine.h"
 
 
