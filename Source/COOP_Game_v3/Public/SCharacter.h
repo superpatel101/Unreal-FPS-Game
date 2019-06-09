@@ -10,7 +10,6 @@
 #include "SCharacter.generated.h"
 
 
-
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -78,6 +77,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Player")
 	bool bDied; //Died previously
+
+
 
 public:	
 	// Called every frame

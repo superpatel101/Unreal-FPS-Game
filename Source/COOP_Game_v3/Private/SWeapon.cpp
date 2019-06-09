@@ -10,6 +10,8 @@
 #include "Particles/ParticleSystem.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "UnrealNetwork.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 
 static int32 DebugWeaponDrawing = 0;
@@ -31,15 +33,29 @@ ASWeapon::ASWeapon()
 	TracerTargetName = "Target";
 
 	SetReplicates(true);
+
+	NetUpdateFrequency = 66.0f;
+	MinNetUpdateFrequency = 33.0f;
 	
 }
 
 
 
 
+void ASWeapon::OnRep_HitScanTrace()
+{
+	// Play cosmetic FX
+	PlayFireEffects(HitScanTrace.TraceTo);
+	PlayImpactEffects(HitScanTrace.SurfaceType, HitScanTrace.TraceTo);
+
+}
+
 void ASWeapon::Fire()
 {
-	
+	if (Role < ROLE_Authority)
+	{
+		ServerFire();
+	}
 	//Trace the world, from pawn eyes to crosshair location
 	AActor* MyOwner = GetOwner();
 	if (MyOwner) {
@@ -63,30 +79,63 @@ void ASWeapon::Fire()
 
 		FVector TracerEndPoint = TraceEnd;
 
+		EPhysicalSurface SurfaceType = SurfaceType_Default;
+
 		FHitResult Hit;
 		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams)) {
 			//Blocked hit
 
 			AActor* HitActor = Hit.GetActor();
 			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
-			if (ImpactEffect) {
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
-			}
 
-			TracerEndPoint = Hit.ImpactPoint;
-			
-
+			EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+			PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
+			PlayFireEffects(TracerEndPoint);
 		}
 
 		if (DebugWeaponDrawing > 0) {
 			DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
 		}
 
-		PlayFireEffects(TracerEndPoint);
+		TracerEndPoint = Hit.ImpactPoint;
 
+		if (Role == ROLE_Authority)
+		{
+			HitScanTrace.TraceTo = TracerEndPoint;
+			HitScanTrace.SurfaceType = SurfaceType;
+			HitScanTrace.UniqueValue = UGameplayStatics::GetRealTimeSeconds(GetWorld());
+
+		}
 	}
 
 	
+}
+
+void ASWeapon::ServerFire_Implementation()
+{
+	Fire();
+}
+
+bool ASWeapon::ServerFire_Validate()
+{
+	return true;
+}
+
+void ASWeapon::PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint)
+{
+	UParticleSystem* SelectedEffect;
+	//switch (SurfaceType)
+	//{
+	//default:
+		SelectedEffect = MuzzleEffect;
+	//}
+	if (SelectedEffect) {
+		FVector ShotDirection = ImpactPoint - MeshComp->GetSocketLocation(MuzzleSocketName);
+		ShotDirection.Normalize();
+
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SelectedEffect, ImpactPoint, ShotDirection.Rotation());
+	}
+
 }
 
 void ASWeapon::PlayFireEffects(FVector TraceEnd)
@@ -99,6 +148,7 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
 
 	if (TracerEffect) {
 		FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
+		MuzzleLocation.Normalize();
 
 		UParticleSystemComponent* TracerComp = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
 		if (TracerComp) {
@@ -106,5 +156,12 @@ void ASWeapon::PlayFireEffects(FVector TraceEnd)
 		}
 	}
 	
+}
+
+void ASWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ASWeapon, HitScanTrace, COND_SkipOwner);
 }
 
