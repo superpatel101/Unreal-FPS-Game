@@ -16,19 +16,18 @@
 
 static int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVarDebugWeaponDrawing(
-	TEXT("COOP.DebugWeapons"), 
-	DebugWeaponDrawing, 
-	TEXT("Draw Debug Lines For Weapons"), 
+	TEXT("COOP.DebugWeapons"),
+	DebugWeaponDrawing,
+	TEXT("Draw Debug Lines For Weapons"),
 	ECVF_Cheat);
 
 
 // Sets default values
 ASWeapon::ASWeapon()
 {
-
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
 	RootComponent = MeshComp;
-	
+
 	MuzzleSocketName = "MuzzleSocket";
 	TracerTargetName = "Target";
 
@@ -36,10 +35,7 @@ ASWeapon::ASWeapon()
 
 	NetUpdateFrequency = 66.0f;
 	MinNetUpdateFrequency = 33.0f;
-	
 }
-
-
 
 
 void ASWeapon::OnRep_HitScanTrace()
@@ -47,7 +43,6 @@ void ASWeapon::OnRep_HitScanTrace()
 	// Play cosmetic FX
 	PlayFireEffects(HitScanTrace.TraceTo);
 	PlayImpactEffects(HitScanTrace.SurfaceType, HitScanTrace.TraceTo);
-
 }
 
 void ASWeapon::Fire()
@@ -58,18 +53,18 @@ void ASWeapon::Fire()
 	}
 	//Trace the world, from pawn eyes to crosshair location
 	AActor* MyOwner = GetOwner();
-	if (MyOwner) {
-
+	if (MyOwner)
+	{
 		FVector EyeLocation;
 		FRotator EyeRotation;
-		
 
-		MyOwner->GetActorEyesViewPoint(EyeLocation,EyeRotation);
+
+		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
 
 		FVector ShotDirection = EyeRotation.Vector();
-		
-		FVector TraceEnd = EyeLocation+ (ShotDirection*10000);
+
+		FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
 
 
 		FCollisionQueryParams QueryParams;
@@ -82,18 +77,21 @@ void ASWeapon::Fire()
 		EPhysicalSurface SurfaceType = SurfaceType_Default;
 
 		FHitResult Hit;
-		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams)) {
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams))
+		{
 			//Blocked hit
 
 			AActor* HitActor = Hit.GetActor();
-			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(), this, DamageType);
+			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(),
+			                                   this, DamageType);
 
 			EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 			PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
 			PlayFireEffects(TracerEndPoint);
 		}
 
-		if (DebugWeaponDrawing > 0) {
+		if (DebugWeaponDrawing > 0)
+		{
 			DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
 		}
 
@@ -104,11 +102,8 @@ void ASWeapon::Fire()
 			HitScanTrace.TraceTo = TracerEndPoint;
 			HitScanTrace.SurfaceType = SurfaceType;
 			HitScanTrace.UniqueValue = UGameplayStatics::GetRealTimeSeconds(GetWorld());
-
 		}
 	}
-
-	
 }
 
 void ASWeapon::ServerFire_Implementation()
@@ -127,35 +122,36 @@ void ASWeapon::PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoi
 	//switch (SurfaceType)
 	//{
 	//default:
-		SelectedEffect = MuzzleEffect;
+	SelectedEffect = MuzzleEffect;
 	//}
-	if (SelectedEffect) {
+	if (SelectedEffect)
+	{
 		FVector ShotDirection = ImpactPoint - MeshComp->GetSocketLocation(MuzzleSocketName);
 		ShotDirection.Normalize();
 
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SelectedEffect, ImpactPoint, ShotDirection.Rotation());
 	}
-
 }
 
 void ASWeapon::PlayFireEffects(FVector TraceEnd)
 {
-	
-	if (MuzzleEffect) {
+	if (MuzzleEffect)
+	{
 		UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComp, MuzzleSocketName);
 	}
 
 
-	if (TracerEffect) {
+	if (TracerEffect)
+	{
 		FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
-		MuzzleLocation.Normalize();
 
-		UParticleSystemComponent* TracerComp = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TracerEffect, MuzzleLocation);
-		if (TracerComp) {
+		UParticleSystemComponent* TracerComp = UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(), TracerEffect, MuzzleLocation);
+		if (TracerComp)
+		{
 			TracerComp->SetVectorParameter(TracerTargetName, TraceEnd);
 		}
 	}
-	
 }
 
 void ASWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -164,4 +160,3 @@ void ASWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetime
 
 	DOREPLIFETIME_CONDITION(ASWeapon, HitScanTrace, COND_SkipOwner);
 }
-
