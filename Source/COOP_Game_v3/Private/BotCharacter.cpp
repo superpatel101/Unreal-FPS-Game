@@ -38,22 +38,26 @@ void ABotCharacter::Tick(float DeltaTime)
 	if (Nearest)
 	{
 		
-		UNavigationPath* NavPath = UNavigationSystemV1::FindPathToActorSynchronously(this, GetActorLocation(), Nearest);
+		UNavigationPath* NavPath = UNavigationSystemV1::FindPathToActorSynchronously(GetWorld(), GetActorLocation(), Nearest);
 
 		if (NavPath && NavPath->PathPoints.Num() > 1)
 		{
 			FVector NextPoint = NavPath->PathPoints[1];
 			FVector Direction = NextPoint - GetActorLocation();
 			Direction.Normalize();
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, Direction.ToString());
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, GetControlRotation().ToString());
+			FRotator Rotation = Direction.Rotation();
+			Rotation.Pitch = 0;
+			Rotation.Roll = 0;
+			SetActorRotation(Rotation);
+			MoveForward(5);
 		}
 		
 		FVector NearestLoc = Nearest->GetActorLocation();
 		FVector Direction = NearestLoc - GetActorLocation();
 
 		Direction.Normalize();
-		SetActorRotation(Direction.Rotation());
-		MoveForward(10);
+		
 
 	}
 
