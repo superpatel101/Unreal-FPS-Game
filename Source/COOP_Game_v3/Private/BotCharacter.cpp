@@ -5,6 +5,8 @@
 #include "Engine/Engine.h"
 #include "Public/SCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "NavigationSystem/Public/NavigationSystem.h"
+#include "NavigationSystem/Public/NavigationPath.h"
 
 void ABotCharacter::Tick(float DeltaTime)
 {
@@ -35,14 +37,24 @@ void ABotCharacter::Tick(float DeltaTime)
 	}
 	if (Nearest)
 	{
+		
+		UNavigationPath* NavPath = UNavigationSystemV1::FindPathToActorSynchronously(this, GetActorLocation(), Nearest);
+
+		if (NavPath && NavPath->PathPoints.Num() > 1)
+		{
+			FVector NextPoint = NavPath->PathPoints[1];
+			FVector Direction = NextPoint - GetActorLocation();
+			Direction.Normalize();
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, Direction.ToString());
+		}
+		
 		FVector NearestLoc = Nearest->GetActorLocation();
 		FVector Direction = NearestLoc - GetActorLocation();
 
 		Direction.Normalize();
 		SetActorRotation(Direction.Rotation());
-		MoveForward(10 * DeltaTime);
+		MoveForward(10);
 
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, Direction.Rotation().ToString());
 	}
 
 }
