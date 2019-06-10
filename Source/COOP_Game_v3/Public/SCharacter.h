@@ -68,8 +68,6 @@ protected:
 
 	void Fire();
 	
-
-
 	UHealthComponent* HealthComponent;
 
 	UFUNCTION()

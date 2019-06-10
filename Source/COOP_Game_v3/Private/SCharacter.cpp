@@ -135,7 +135,7 @@ void ASCharacter::Tick(float DeltaTime)
 
 	CameraComp->SetFieldOfView(NewFOV);
 
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::SanitizeFloat(HealthComponent->GetHealth()));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::SanitizeFloat(HealthComponent->GetHealth()));
 
 }
 
