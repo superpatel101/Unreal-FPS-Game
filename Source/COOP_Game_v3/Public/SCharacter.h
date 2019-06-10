@@ -67,7 +67,15 @@ protected:
 	FName WeaponAttachSocketName;
 
 	void Fire();
+
+	void Reload();
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
+	int32 LoadedAmmo;
 	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
+	int32 AmmoPool;
+
 	UHealthComponent* HealthComponent;
 
 	UFUNCTION()

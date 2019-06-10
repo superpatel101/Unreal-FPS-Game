@@ -33,6 +33,8 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	LoadedAmmo = 30;
+	AmmoPool = 30;
 
 	ZoomedFOV = 65.0f;
 	ZoomInterpSpeed = 20;
@@ -102,8 +104,26 @@ void ASCharacter::EndZoom()
 
 void ASCharacter::Fire()
 {
+	if (LoadedAmmo <= 0) {
+		return;
+	}
+	LoadedAmmo -= 1;
 	if (CurrentWeapon) {
 		CurrentWeapon->Fire();
+	}
+}
+void ASCharacter::Reload()
+{
+	if (AmmoPool <= 0 || LoadedAmmo >= 30) {
+		return;
+	}
+	if (AmmoPool < (30 - LoadedAmmo)) {
+		LoadedAmmo += AmmoPool;
+		AmmoPool = 0;
+	}
+	else {
+		AmmoPool = AmmoPool - (30 - LoadedAmmo);
+		LoadedAmmo = 30;
 	}
 }
 void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
@@ -156,7 +176,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ASCharacter::Fire);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ASCharacter::Reload);
 }
 
 FVector ASCharacter::GetPawnViewLocation() const
