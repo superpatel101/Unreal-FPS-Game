@@ -74,8 +74,13 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_HitScanTrace)
 		FHitScanTrace HitScanTrace;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	int AmmoAmount;
+
 	UFUNCTION()
 		void OnRep_HitScanTrace();
+
+	
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
