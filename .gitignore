@@ -12,3 +12,7 @@ Saved
 *.suo
 *.xcodeproj
 *.xcworkspace
+cmake-build-debug
+.idea
+*.code-workspace
+CMakeLists.txt
