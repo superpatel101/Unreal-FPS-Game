@@ -59,14 +59,16 @@ protected:
 	UPROPERTY(Replicated)
 	ASWeapon* CurrentWeapon;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Player")
 	TSubclassOf<ASWeapon> StarterWeaponClass;
 
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
-	void Fire();
+	void StartFire();
+
+	void StopFire();
 
 	void Reload();
 

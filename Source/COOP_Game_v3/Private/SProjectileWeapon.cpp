@@ -7,7 +7,7 @@
 
 void ASProjectileWeapon::Fire() {
 	AActor* MyOwner = GetOwner();
-	if (MyOwner) {
+	if (MyOwner && ProjectileClass) {
 
 		FVector EyeLocation;
 		FRotator EyeRotation;

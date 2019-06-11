@@ -13,6 +13,7 @@
 #include "UnrealNetwork.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "COOP_Game_v3.h"
+#include "TimerManager.h"
 
 
 
@@ -37,6 +38,13 @@ ASWeapon::ASWeapon()
 
 	NetUpdateFrequency = 66.0f;
 	MinNetUpdateFrequency = 33.0f;
+	RateOfFire = 600;
+}
+
+void ASWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+	TimeBetweenShots = 60/RateOfFire;
 }
 
 
@@ -45,6 +53,20 @@ void ASWeapon::OnRep_HitScanTrace()
 	// Play cosmetic FX
 	PlayFireEffects(HitScanTrace.TraceTo);
 	PlayImpactEffects(HitScanTrace.SurfaceType, HitScanTrace.TraceTo);
+}
+
+void ASWeapon::StartFire()
+{
+	float FirstDelay = FMath::Max(LastFireTime +TimeBetweenShots- GetWorld()->TimeSeconds,0.0f);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true,0.0f);
+	
+	
+}
+
+void ASWeapon::StopFire()
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBetweenShots);
 }
 
 
@@ -105,6 +127,8 @@ void ASWeapon::Fire()
 
 		TracerEndPoint = Hit.ImpactPoint;
 
+		LastFireTime = GetWorld()->TimeSeconds;
+
 		if (Role == ROLE_Authority)
 		{
 			HitScanTrace.TraceTo = TracerEndPoint;
@@ -124,6 +148,8 @@ bool ASWeapon::ServerFire_Validate()
 {
 	return true;
 }
+
+
 
 void ASWeapon::PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint)
 {
