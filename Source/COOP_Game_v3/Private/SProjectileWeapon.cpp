@@ -7,14 +7,13 @@
 
 void ASProjectileWeapon::Fire() {
 	AActor* MyOwner = GetOwner();
-	if (MyOwner) {
+	if (MyOwner && ProjectileClass) {
 
 		FVector EyeLocation;
 		FRotator EyeRotation;
 		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
 		FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
-		FVector MuzzleRotation = MeshComp->GetSocketRotation(MuzzleSocketName);
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 

@@ -42,6 +42,8 @@ public:
 
 protected:
 	
+	virtual void BeginPlay() override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USkeletalMeshComponent* MeshComp;
 
@@ -74,7 +76,16 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_HitScanTrace)
 		FHitScanTrace HitScanTrace;
 
-	
+	virtual void Fire();
+
+	FTimerHandle TimerHandle_TimeBetweenShots;
+
+	float LastFireTime;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float RateOfFire;
+
+	float TimeBetweenShots;
 
 	UFUNCTION()
 		void OnRep_HitScanTrace();
@@ -82,8 +93,10 @@ public:
 	
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	virtual void Fire();
+	
+
+	void StartFire();
+	void StopFire();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerFire();

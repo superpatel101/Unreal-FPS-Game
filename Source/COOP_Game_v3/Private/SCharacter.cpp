@@ -40,6 +40,7 @@ ASCharacter::ASCharacter()
 	ZoomInterpSpeed = 20;
 
 	WeaponAttachSocketName = "WeaponSocket";
+	
 
 
 
@@ -102,14 +103,21 @@ void ASCharacter::EndZoom()
 	bWantsToZoom = false;
 }
 
-void ASCharacter::Fire()
+void ASCharacter::StartFire()
 {
-	if (LoadedAmmo <= 0) {
-		return;
-	}
-	LoadedAmmo -= 1;
+	
 	if (CurrentWeapon) {
-		CurrentWeapon->Fire();
+		if (LoadedAmmo <= 0) {
+			return;
+		}
+		LoadedAmmo -= 1;
+		CurrentWeapon->StartFire();
+	}
+}
+void ASCharacter::StopFire()
+{
+	if (CurrentWeapon) {
+		CurrentWeapon->StopFire();
 	}
 }
 void ASCharacter::Reload()
@@ -173,7 +181,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &ASCharacter::BeginZoom);
 	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &ASCharacter::EndZoom);
 
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ASCharacter::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ASCharacter::StartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ASCharacter::StopFire);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ASCharacter::Reload);
