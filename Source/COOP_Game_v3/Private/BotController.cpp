@@ -15,34 +15,40 @@ void ABotController::BeginPlay()
     bSetControlRotationFromPawnOrientation = true;
 }
 
+AActor* ABotController::GetNearestEnemy()
+{
+	TArray<AActor*> FoundActors;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASCharacter::StaticClass(), FoundActors);
+
+	AActor* Nearest = nullptr;
+
+	for (int i = 0; i < FoundActors.Num(); i++)
+	{
+		if (FoundActors[i] != this && !Cast<ABotCharacter>(FoundActors[i]))
+		{
+			if (!Nearest)
+			{
+				Nearest = FoundActors[i];
+			}
+			float distOld = Nearest->GetDistanceTo(this);
+			float distNew = FoundActors[i]->GetDistanceTo(this);
+
+			if (distNew < distOld)
+			{
+				Nearest = FoundActors[i];
+			}
+		}
+	}
+	return Nearest;
+}
+
 void ABotController::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
     if (Role == ROLE_Authority)
     {
-        TArray<AActor*> FoundActors;
-        
-        UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASCharacter::StaticClass(), FoundActors);
-        
-        AActor* Nearest = nullptr;
-        
-        for (int i = 0; i < FoundActors.Num(); i++)
-        {
-            if (FoundActors[i] != this && !Cast<ABotCharacter>(FoundActors[i]))
-            {
-                if (!Nearest)
-                {
-                    Nearest = FoundActors[i];
-                }
-                float distOld = Nearest->GetDistanceTo(this);
-                float distNew = FoundActors[i]->GetDistanceTo(this);
-                
-                if (distNew < distOld)
-                {
-                    Nearest = FoundActors[i];
-                }
-            }
-        }
+		AActor* Nearest = GetNearestEnemy();
         if (Nearest) {
 //            K2_SetFocus(Nearest);
             SetFocalPoint(Nearest->GetActorLocation());

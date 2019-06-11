@@ -16,4 +16,5 @@ class COOP_GAME_V3_API ABotController : public AAIController
 public:
     void Tick(float DeltaTime) override;
     void BeginPlay() override;
+	AActor* GetNearestEnemy();
 };

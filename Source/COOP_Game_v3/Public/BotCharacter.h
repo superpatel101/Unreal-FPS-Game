@@ -18,11 +18,23 @@ protected:
     
     UFUNCTION(Server, Reliable, WithValidation)
     virtual void ServerBeginPlay();
+
+	AActor* GetNearestEnemy();
     
     float TimeLastFired;
+
+	uint32 GetDecision();
+
+	void MoveTowardsEnemy(float DeltaTime, AActor* Target = nullptr);
+	
 public:
 	void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, Category = "Behavior")
 		class UBehaviorTree* BotBehavior;
+	uint32 SHOOT = 1;
+	uint32 MOVE_TOWARDS_ENEMY = 2;
+	uint32 RETREAT = 3;
+
+	float MIN_DIST = 300;
 };
