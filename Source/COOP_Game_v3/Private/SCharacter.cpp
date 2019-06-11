@@ -70,7 +70,10 @@ void ASCharacter::BeginPlay()
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		}
 
-	}
+	} else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Weapon spawn failed: not ROLE_Authority"));
+    }
 }
 
 void ASCharacter::MoveForward(float Value)

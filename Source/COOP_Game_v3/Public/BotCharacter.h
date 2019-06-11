@@ -13,6 +13,13 @@ UCLASS()
 class COOP_GAME_V3_API ABotCharacter : public ASCharacter
 {
 	GENERATED_BODY()
+protected:
+    virtual void BeginPlay() override;
+    
+    UFUNCTION(Server, Reliable, WithValidation)
+    virtual void ServerBeginPlay();
+    
+    float TimeLastFired;
 public:
 	void Tick(float DeltaTime) override;
 
