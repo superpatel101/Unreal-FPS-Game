@@ -18,5 +18,5 @@ protected:
 	virtual void Fire() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "ProjectileWeapon")
-		TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> ProjectileClass;
 };
