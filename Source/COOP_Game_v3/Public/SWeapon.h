@@ -97,6 +97,8 @@ public:
 
 	void StartFire();
 	void StopFire();
+	void SetFireRate(float FireRate);
+	float GetFireRate();
 
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerFire();
