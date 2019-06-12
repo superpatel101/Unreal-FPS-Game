@@ -39,13 +39,14 @@ ASWeapon::ASWeapon()
 
 	NetUpdateFrequency = 66.0f;
 	MinNetUpdateFrequency = 33.0f;
+	BaseDamage = 10.0f;
 	//RateOfFire = 600;
 }
 
 void ASWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	TimeBetweenShots = 60/RateOfFire;
+	TimeBetweenShots = 1/RateOfFire;
 }
 
 
@@ -70,9 +71,27 @@ void ASWeapon::StopFire()
 
 void ASWeapon::SetFireRate(float FireRate)
 {
-	RateOfFire = FireRate;
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "HUHUHUHUH");
+	if (Role == ROLE_Authority)
+	{
+		RateOfFire = FireRate;
+	} else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "HUHUHUHUH");
+		
+	}
 }
+
+void ASWeapon::ServerSetFireRate_Implementation(float FireRate)
+{
+	SetFireRate(FireRate);
+}
+
+bool ASWeapon::ServerSetFireRate_Validate(float FireRate)
+{
+	return true;
+}
+
+
 
 float ASWeapon::GetFireRate()
 {
@@ -130,7 +149,7 @@ void ASWeapon::Fire()
 				//Blocked hit
 
 				AActor* HitActor = Hit.GetActor();
-				UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(),
+				UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),
 					this, DamageType);
 
 				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());

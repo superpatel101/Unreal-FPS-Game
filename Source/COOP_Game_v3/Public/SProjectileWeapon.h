@@ -15,6 +15,11 @@ class COOP_GAME_V3_API ASProjectileWeapon : public ASWeapon
 	GENERATED_BODY()
 
 protected:
+	void SpawnProjectile();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSpawnProjectile();
+
 	virtual void Fire() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "ProjectileWeapon")

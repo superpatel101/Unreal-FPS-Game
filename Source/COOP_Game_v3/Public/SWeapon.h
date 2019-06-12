@@ -82,10 +82,16 @@ public:
 
 	float LastFireTime;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UPROPERTY(Replicated, EditDefaultsOnly, Category = "Weapon")
 	float RateOfFire;
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetFireRate(float FireRate);
+
 	float TimeBetweenShots;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
+		float BaseDamage;
 
 	UFUNCTION()
 		void OnRep_HitScanTrace();

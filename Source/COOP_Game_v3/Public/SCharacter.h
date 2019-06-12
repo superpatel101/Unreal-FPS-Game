@@ -86,7 +86,13 @@ protected:
 	float Primary_ZoomedFOV;
 	float Secondary_ZoomedFOV;
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSwitchWeapon();
+
+	UPROPERTY(Replicated)
 	int32 LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
+
+	UPROPERTY(Replicated)
 	int32 AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
@@ -100,9 +106,6 @@ protected:
 	
 	UPROPERTY(Replicated, EditAnywhere,BlueprintReadWrite, Category = "Ammo")
 	int32 AmmoPool;
-
-	
-
 
 	UHealthComponent* HealthComponent;
 

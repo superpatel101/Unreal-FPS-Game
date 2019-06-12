@@ -161,42 +161,58 @@ void ASCharacter::Reload()
 }
 void ASCharacter::SwitchWeapon()
 {
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	CurrentWeapon->Destroy();
-	if (OnMainWeapon == 1) {
-		OnMainWeapon = 2;
-		LoadedAmmosEach[0] = LoadedAmmo;
-		AmmoPoolsEach[0] = AmmoPool;
-		LoadedAmmo = LoadedAmmosEach[1];
-		AmmoPool = AmmoPoolsEach[1];
-		ZoomedFOV = Secondary_ZoomedFOV;
-		CurrentWeapon->SetFireRate(600);
-	}
-	else {
-		OnMainWeapon = 1;
-		LoadedAmmosEach[1] = LoadedAmmo;
-		AmmoPoolsEach[1] = AmmoPool;
-		
-		LoadedAmmo = LoadedAmmosEach[0];
-		AmmoPool = AmmoPoolsEach[0];
-		ZoomedFOV = Primary_ZoomedFOV;
-		CurrentWeapon->SetFireRate(600);
-	}
-	if (OnMainWeapon == 1) {
-		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-	}
-	else {
-		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(SecondaryWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	if (Role == ROLE_Authority)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		CurrentWeapon->Destroy();
+		if (OnMainWeapon == 1) {
+			OnMainWeapon = 2;
+			LoadedAmmosEach[0] = LoadedAmmo;
+			AmmoPoolsEach[0] = AmmoPool;
+			LoadedAmmo = LoadedAmmosEach[1];
+			AmmoPool = AmmoPoolsEach[1];
+			ZoomedFOV = Secondary_ZoomedFOV;
+			CurrentWeapon->SetFireRate(600);
+		}
+		else {
+			OnMainWeapon = 1;
+			LoadedAmmosEach[1] = LoadedAmmo;
+			AmmoPoolsEach[1] = AmmoPool;
 
-	}
-	if (CurrentWeapon) {
+			LoadedAmmo = LoadedAmmosEach[0];
+			AmmoPool = AmmoPoolsEach[0];
+			ZoomedFOV = Primary_ZoomedFOV;
+			CurrentWeapon->SetFireRate(600);
+		}
+		if (OnMainWeapon == 1) {
+			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		}
+		else {
+			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(SecondaryWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+
+		}
+		if (CurrentWeapon) {
 
 			CurrentWeapon->SetOwner(this);
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		}
-	
+	} else
+	{
+		ServerSwitchWeapon();
+	}
 }
+
+void ASCharacter::ServerSwitchWeapon_Implementation()
+{
+	SwitchWeapon();
+}
+
+bool ASCharacter::ServerSwitchWeapon_Validate()
+{
+	return true;
+}
+
 
 
 void ASCharacter::ServerReload_Implementation()
@@ -235,10 +251,10 @@ void ASCharacter::Tick(float DeltaTime)
 	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
 
 	float NewFOV = FMath::FInterpTo(CameraComp->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
-	CurrentWeapon->SetFireRate(300);
-	float num = CurrentWeapon->GetFireRate();
+	// CurrentWeapon->SetFireRate(300);
+	// float num = CurrentWeapon->GetFireRate();
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("%f"),num));
+	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("%f"),num));
 	CameraComp->SetFieldOfView(NewFOV);
 
 	 
@@ -285,6 +301,8 @@ void ASCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(ASCharacter, bDied);
 	DOREPLIFETIME(ASCharacter, LoadedAmmo);
 	DOREPLIFETIME(ASCharacter, AmmoPool);
+	DOREPLIFETIME(ASCharacter, LoadedAmmosEach);
+	DOREPLIFETIME(ASCharacter, AmmoPoolsEach);
 }
 
 void ASCharacter::ReduceAmmoByOne()
