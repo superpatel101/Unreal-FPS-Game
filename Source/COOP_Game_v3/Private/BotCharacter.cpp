@@ -10,10 +10,53 @@
 #include "Public/SWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Public/HealthRegenActor.h"
+#include "COOP_Game_v3.h"
+#include "AmmoRegenActor.h"
 
 uint32 ABotCharacter::GetDecision()
 {
-	return MOVE_TOWARDS_ENEMY;
+	if (LoadedAmmo == 0)
+	{
+		Reload();
+	}
+	if (HealthComponent->GetHealth() <= 30)
+	{
+		return RETREAT;
+	}
+
+	AActor* Nearest = GetNearestOfClass();
+
+	if(LoadedAmmo > 0)
+	{
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.AddIgnoredActor(Nearest);
+		QueryParams.bTraceComplex = true;
+
+		FHitResult Hit;
+
+		if (GetWorld()->LineTraceSingleByChannel(Hit, GetActorLocation(), Nearest->GetActorLocation(), COLLISION_WEAPON, QueryParams))
+		{
+			return MOVE_TOWARDS_ENEMY;
+		}
+		else
+		{
+			Attack();
+		}
+	} else
+	{
+		return AMMO_REFILL;
+	}
+	
+	if (Nearest->GetDistanceTo(this) > MIN_DIST)
+	{
+		return MOVE_TOWARDS_ENEMY;
+	}
+	// return AMMO_REFILL;
+	
+
+	return -1;
 }
 
 void ABotCharacter::MoveTowardsEnemy(float DeltaTime, AActor* Target)
@@ -24,7 +67,7 @@ void ABotCharacter::MoveTowardsEnemy(float DeltaTime, AActor* Target)
 		Nearest = Target;
 	} else
 	{
-		Nearest = GetNearestEnemy();
+		Nearest = GetNearestOfClass();
 
 	}
 	if (Nearest)
@@ -41,11 +84,33 @@ void ABotCharacter::MoveTowardsEnemy(float DeltaTime, AActor* Target)
 			Rotation.Pitch = 0;
 			Rotation.Roll = 0;
 			SetActorRotation(Rotation);
-			if ((Nearest->GetActorLocation() - GetActorLocation()).Size() > MIN_DIST)
-			{
-				MoveForward(80 * DeltaTime);
-			}
+			//if ((Nearest->GetActorLocation() - GetActorLocation()).Size() > MIN_DIST)
+			//{
+			MoveForward(80 * DeltaTime);
+			//}
 		}
+	}
+}
+
+void ABotCharacter::GoToHealthRegen(float DeltaTime)
+{
+	AActor* Nearest = GetNearestOfClass(AHealthRegenActor::StaticClass());
+	MoveTowardsEnemy(DeltaTime, Nearest);
+}
+
+void ABotCharacter::GoToAmmoRefill(float DeltaTime)
+{
+	AActor* Nearest = GetNearestOfClass(AAmmoRegenActor::StaticClass());
+	MoveTowardsEnemy(DeltaTime, Nearest);
+}
+
+
+void ABotCharacter::Attack()
+{
+	if (GetWorld()->GetRealTimeSeconds() - TimeLastFired > 0.4)
+	{
+		CurrentWeapon->Fire();
+		TimeLastFired = GetWorld()->GetRealTimeSeconds();
 	}
 }
 
@@ -56,17 +121,34 @@ void ABotCharacter::Tick(float DeltaTime)
 	if (Role == ROLE_Authority)
 	{
 		const uint32 Decision = GetDecision();
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::FromInt(Decision));
 
-		if (Decision == SHOOT)
+		if (Decision == AMMO_REFILL)
 		{
-
+			GoToAmmoRefill(DeltaTime);
 		}
 		else if (Decision == MOVE_TOWARDS_ENEMY)
 		{
+			StopFire();
 			MoveTowardsEnemy(DeltaTime);
 		}
 		else if (Decision == RETREAT)
 		{
+			StopFire();
+			GoToHealthRegen(DeltaTime);
+		}
+		if (bShouldFire)
+		{
+			StartFire();
+			bShouldFire = false;
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("STARTING FIRE"));
+
+		}
+		if (bShouldStopFire)
+		{
+			StopFire();
+			bShouldStopFire = false;
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("STOPPING FIRE"));
 
 		}
 	}
@@ -100,11 +182,11 @@ void ABotCharacter::BeginPlay()
     }
 }
 
-AActor* ABotCharacter::GetNearestEnemy()
+AActor* ABotCharacter::GetNearestOfClass(UClass* Type)
 {
 	TArray<AActor*> FoundActors;
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASCharacter::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), Type, FoundActors);
 
 	AActor* Nearest = nullptr;
 
