@@ -89,7 +89,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int32 OnMainWeapon;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerReload();
 
