@@ -53,6 +53,8 @@ ASCharacter::ASCharacter()
 	OnMainWeapon = 1;
 
 	WeaponAttachSocketName = "WeaponSocket";
+
+	FlagAttachSocketName = "FlagSocket";
 	
 
 
@@ -85,7 +87,7 @@ void ASCharacter::BeginPlay()
 			CurrentWeapon->SetOwner(this);
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		}
-		CurrentWeapon->SetFireRate(300);
+		// CurrentWeapon->SetFireRate(300);
 
 	} else
     {
@@ -303,6 +305,7 @@ void ASCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(ASCharacter, AmmoPool);
 	DOREPLIFETIME(ASCharacter, LoadedAmmosEach);
 	DOREPLIFETIME(ASCharacter, AmmoPoolsEach);
+	DOREPLIFETIME(ASCharacter, TeamNum);
 }
 
 void ASCharacter::ReduceAmmoByOne()
@@ -341,6 +344,7 @@ void ASCharacter::AddAmmo(int32 Amount)
 		ServerAddAmmo(Amount);
 	}
 }
+
 
 void ASCharacter::ServerAddAmmo_Implementation(int32 Amount)
 {

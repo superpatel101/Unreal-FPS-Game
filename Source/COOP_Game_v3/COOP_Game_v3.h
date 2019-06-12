@@ -8,3 +8,6 @@
 #define SURFACE_FLESHVULNERABLE SurfaceType2
 
 #define COLLISION_WEAPON		ECC_GameTraceChannel1
+
+#define TEAM_RED				0
+#define TEAM_BLUE				1

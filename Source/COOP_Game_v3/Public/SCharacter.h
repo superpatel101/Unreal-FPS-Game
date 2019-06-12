@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Public/HealthComponent.h"
-
+#include "CTF_Flag.h"
 
 #include "SCharacter.generated.h"
 
@@ -16,6 +16,8 @@ class USpringArmComponent;
 class ASWeapon;
 
 class UHealthComponent;
+
+class ACTF_Flag;
 
 UCLASS()
 class COOP_GAME_V3_API ASCharacter : public ACharacter
@@ -29,9 +31,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+
 	void MoveForward(float Value);
-	
+
 	void MoveRight(float Value);
 
 	void BeginCrouch();
@@ -39,36 +41,35 @@ protected:
 	void EndCrouch();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UCameraComponent* CameraComp;
+		UCameraComponent* CameraComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USpringArmComponent* SpringArmComp;
+		USpringArmComponent* SpringArmComp;
 
 	bool bWantsToZoom;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
-	float ZoomedFOV;
+		float ZoomedFOV;
 
-	UPROPERTY(EditDefaultsOnly,Category = "Player", meta = (ClampMin = 0.1,ClampMax = 100))
-	float ZoomInterpSpeed;
-	
+	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
+		float ZoomInterpSpeed;
+
 	float DefaultFOV;
-	
+
 
 	void BeginZoom();
 	void EndZoom();
 
 	UPROPERTY(Replicated)
-	ASWeapon* CurrentWeapon;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Player")
-	TSubclassOf<ASWeapon> StarterWeaponClass;
+		ASWeapon* CurrentWeapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	TSubclassOf<ASWeapon> SecondaryWeaponClass;
+		TSubclassOf<ASWeapon> StarterWeaponClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+		TSubclassOf<ASWeapon> SecondaryWeaponClass;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
-	FName WeaponAttachSocketName;
+		FName WeaponAttachSocketName;
 
 	void StartFire();
 
@@ -87,25 +88,25 @@ protected:
 	float Secondary_ZoomedFOV;
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerSwitchWeapon();
+		void ServerSwitchWeapon();
 
 	UPROPERTY(Replicated)
-	int32 LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
+		int32 LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
 
 	UPROPERTY(Replicated)
-	int32 AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
+		int32 AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	int32 OnMainWeapon;
+		int32 OnMainWeapon;
 
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerReload();
 
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Ammo")
-	int32 LoadedAmmo;
-	
-	UPROPERTY(Replicated, EditAnywhere,BlueprintReadWrite, Category = "Ammo")
-	int32 AmmoPool;
+		int32 LoadedAmmo;
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Ammo")
+		int32 AmmoPool;
 
 	UHealthComponent* HealthComponent;
 
@@ -113,9 +114,9 @@ protected:
 		void OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Player")
-	bool bDied; //Died previously
+		bool bDied; //Died previously
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -137,4 +138,21 @@ public:
 
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerAddAmmo(int32 Amount);
+
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Health Component")
+		int32 TeamNum;
+
+	bool IsFriendly(ASCharacter* A, ASCharacter* B)
+	{
+		if (A == nullptr || B == nullptr)
+		{
+			return true; // assume friendly
+		}
+		return A->TeamNum == B->TeamNum;
+	}
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+		FName FlagAttachSocketName;
+
+	ACTF_Flag* CurrentFlag;
 };

@@ -44,6 +44,5 @@ public:
 		FOnHealthChangedSignature OnHealthChanged;
 	float GetHealth();
 
-	void Heal(float amount);
-		
+	void Heal(float amount);		
 };
