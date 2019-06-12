@@ -62,7 +62,6 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Player")
 	TSubclassOf<ASWeapon> StarterWeaponClass;
 
-
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
 	FName WeaponAttachSocketName;
 
@@ -72,10 +71,13 @@ protected:
 
 	void Reload();
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerReload();
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	int32 LoadedAmmo;
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
+	UPROPERTY(Replicated, EditAnywhere,BlueprintReadWrite, Category = "Ammo")
 	int32 AmmoPool;
 
 	UHealthComponent* HealthComponent;
@@ -85,8 +87,6 @@ protected:
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Player")
 	bool bDied; //Died previously
-
-
 
 public:	
 	// Called every frame
@@ -99,4 +99,15 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerReduceAmmoByOne();
+
+	void ReduceAmmoByOne();
+
+	int32 GetLoadedAmmo();
+
+	void AddAmmo(int32 Amount);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerAddAmmo(int32 Amount);
 };
