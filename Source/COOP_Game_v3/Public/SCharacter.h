@@ -90,9 +90,13 @@ protected:
 	int32 OnMainWeapon;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerReload();
+
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Ammo")
 	int32 LoadedAmmo;
 	
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
+	UPROPERTY(Replicated, EditAnywhere,BlueprintReadWrite, Category = "Ammo")
 	int32 AmmoPool;
 
 	
@@ -106,8 +110,6 @@ protected:
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Player")
 	bool bDied; //Died previously
 
-
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -119,4 +121,15 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerReduceAmmoByOne();
+
+	void ReduceAmmoByOne();
+
+	int32 GetLoadedAmmo();
+
+	void AddAmmo(int32 Amount);
+
+	UFUNCTION(Server, Reliable, WithValidation)
+		void ServerAddAmmo(int32 Amount);
 };
