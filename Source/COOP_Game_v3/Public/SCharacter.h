@@ -78,13 +78,13 @@ protected:
 
 	void SwitchWeapon();
 
-	int Primary_LoadedAmmo;
-	int Primary_AmmoPool;
-	int Secondary_LoadedAmmo;
-	int Secondary_AmmoPool;
+	int32 Primary_LoadedAmmo;
+	int32 Primary_AmmoPool;
+	int32 Secondary_LoadedAmmo;
+	int32 Secondary_AmmoPool;
 
-	int LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
-	int AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
+	int32 LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
+	int32 AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int32 OnMainWeapon;

@@ -33,10 +33,19 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
-	
+	Primary_LoadedAmmo=30;
+	Primary_AmmoPool=30;
+	Secondary_LoadedAmmo = 10;
+	Secondary_AmmoPool = 10;
 
-	LoadedAmmo = 30;
-	AmmoPool = 30;
+	LoadedAmmo = Primary_LoadedAmmo;
+	AmmoPool = Primary_AmmoPool;
+	
+	LoadedAmmosEach[0] = Primary_LoadedAmmo;
+	LoadedAmmosEach[1] = Secondary_LoadedAmmo;
+
+	AmmoPoolsEach[0] = Primary_AmmoPool;
+	AmmoPoolsEach[1] = Secondary_AmmoPool;
 
 	ZoomedFOV = 65.0f;
 	ZoomInterpSpeed = 20;
@@ -56,7 +65,6 @@ ASCharacter::ASCharacter()
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 	DefaultFOV = CameraComp->FieldOfView;
 	HealthComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	if (Role == ROLE_Authority)
@@ -151,9 +159,18 @@ void ASCharacter::SwitchWeapon()
 	CurrentWeapon->Destroy();
 	if (OnMainWeapon == 1) {
 		OnMainWeapon = 2;
+		LoadedAmmosEach[0] = LoadedAmmo;
+		AmmoPoolsEach[0] = AmmoPool;
+		LoadedAmmo = LoadedAmmosEach[1];
+		AmmoPool = AmmoPoolsEach[1];
 	}
 	else {
 		OnMainWeapon = 1;
+		LoadedAmmosEach[1] = LoadedAmmo;
+		AmmoPoolsEach[1] = AmmoPool;
+		
+		LoadedAmmo = LoadedAmmosEach[0];
+		AmmoPool = AmmoPoolsEach[0];
 	}
 	if (OnMainWeapon == 1) {
 		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
@@ -198,7 +215,7 @@ void ASCharacter::Tick(float DeltaTime)
 
 	CameraComp->SetFieldOfView(NewFOV);
 
-	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::SanitizeFloat(HealthComponent->GetHealth()));
+	 
 
 }
 
