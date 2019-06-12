@@ -33,11 +33,14 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	
+
 	LoadedAmmo = 30;
 	AmmoPool = 30;
 
 	ZoomedFOV = 65.0f;
 	ZoomInterpSpeed = 20;
+	OnMainWeapon = 1;
 
 	WeaponAttachSocketName = "WeaponSocket";
 	
@@ -60,10 +63,14 @@ void ASCharacter::BeginPlay()
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		if (OnMainWeapon == 1) {
+			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+		}
+		else {
+			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(SecondaryWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 
-
-		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
-
+		}
+		
 		if (CurrentWeapon) {
 
 			CurrentWeapon->SetOwner(this);
@@ -137,6 +144,31 @@ void ASCharacter::Reload()
 		LoadedAmmo = 30;
 	}
 }
+void ASCharacter::SwitchWeapon()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	CurrentWeapon->Destroy();
+	if (OnMainWeapon == 1) {
+		OnMainWeapon = 2;
+	}
+	else {
+		OnMainWeapon = 1;
+	}
+	if (OnMainWeapon == 1) {
+		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+	}
+	else {
+		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(SecondaryWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+
+	}
+	if (CurrentWeapon) {
+
+			CurrentWeapon->SetOwner(this);
+			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
+		}
+	
+}
 void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (Health <= 0.0f && !bDied)
@@ -189,6 +221,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ASCharacter::Reload);
+	PlayerInputComponent->BindAction("SwitchWeapon", IE_Pressed, this, &ASCharacter::SwitchWeapon);
+
 }
 
 FVector ASCharacter::GetPawnViewLocation() const

@@ -52,6 +52,7 @@ protected:
 	float ZoomInterpSpeed;
 	
 	float DefaultFOV;
+	
 
 	void BeginZoom();
 	void EndZoom();
@@ -61,6 +62,9 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Player")
 	TSubclassOf<ASWeapon> StarterWeaponClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	TSubclassOf<ASWeapon> SecondaryWeaponClass;
 
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
@@ -72,11 +76,27 @@ protected:
 
 	void Reload();
 
+	void SwitchWeapon();
+
+	int Primary_LoadedAmmo;
+	int Primary_AmmoPool;
+	int Secondary_LoadedAmmo;
+	int Secondary_AmmoPool;
+
+	int LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
+	int AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	int32 OnMainWeapon;
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
 	int32 LoadedAmmo;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Ammo")
 	int32 AmmoPool;
+
+	
+
 
 	UHealthComponent* HealthComponent;
 
