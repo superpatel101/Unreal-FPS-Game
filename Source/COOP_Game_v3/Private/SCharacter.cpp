@@ -128,6 +128,7 @@ void ASCharacter::StartFire()
 		if (LoadedAmmo <= 0) {
 			return;
 		}
+		LoadedAmmo -= 1;
 		CurrentWeapon->StartFire();
 	}
 }
@@ -139,22 +140,16 @@ void ASCharacter::StopFire()
 }
 void ASCharacter::Reload()
 {
-	if (Role == ROLE_Authority)
-	{
-		if (AmmoPool <= 0 || LoadedAmmo >= 30) {
-			return;
-		}
-		if (AmmoPool < (30 - LoadedAmmo)) {
-			LoadedAmmo += AmmoPool;
-			AmmoPool = 0;
-		}
-		else {
-			AmmoPool = AmmoPool - (30 - LoadedAmmo);
-			LoadedAmmo = 30;
-		}
-	} else
-	{
-		ServerReload();
+	if (AmmoPool <= 0 || LoadedAmmo >= 30) {
+		return;
+	}
+	if (AmmoPool < (30 - LoadedAmmo)) {
+		LoadedAmmo += AmmoPool;
+		AmmoPool = 0;
+	}
+	else {
+		AmmoPool = AmmoPool - (30 - LoadedAmmo);
+		LoadedAmmo = 30;
 	}
 }
 void ASCharacter::SwitchWeapon()
@@ -191,18 +186,6 @@ void ASCharacter::SwitchWeapon()
 		}
 	
 }
-
-
-void ASCharacter::ServerReload_Implementation()
-{
-	Reload();
-}
-
-bool ASCharacter::ServerReload_Validate()
-{
-	return true;
-}
-
 void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (Health <= 0.0f && !bDied)
@@ -274,60 +257,5 @@ void ASCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 
 	DOREPLIFETIME(ASCharacter, CurrentWeapon);
 	DOREPLIFETIME(ASCharacter, bDied);
-	DOREPLIFETIME(ASCharacter, LoadedAmmo);
-	DOREPLIFETIME(ASCharacter, AmmoPool);
 }
 
-void ASCharacter::ReduceAmmoByOne()
-{
-	if (Role == ROLE_Authority)
-	{
-		LoadedAmmo--;
-	}
-	else
-	{
-		ServerReduceAmmoByOne();
-	}
-}
-
-void ASCharacter::ServerReduceAmmoByOne_Implementation()
-{
-	ReduceAmmoByOne();
-}
-
-bool ASCharacter::ServerReduceAmmoByOne_Validate()
-{
-	return true;
-}
-
-
-void ASCharacter::AddAmmo(int32 Amount)
-{
-	if (Role == ROLE_Authority)
-	{
-		AmmoPool += Amount;
-		UE_LOG(LogTemp, Warning, TEXT("Adding Ammo As Server"));
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::FromInt(AmmoPool));
-
-	} else
-	{
-		ServerAddAmmo(Amount);
-	}
-}
-
-void ASCharacter::ServerAddAmmo_Implementation(int32 Amount)
-{
-	AddAmmo(Amount);
-}
-
-bool ASCharacter::ServerAddAmmo_Validate(int32 Amount)
-{
-	return true;
-}
-
-
-
-int32 ASCharacter::GetLoadedAmmo()
-{
-	return LoadedAmmo;
-}

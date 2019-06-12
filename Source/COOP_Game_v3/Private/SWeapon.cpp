@@ -60,6 +60,8 @@ void ASWeapon::StartFire()
 	float FirstDelay = FMath::Max(LastFireTime +TimeBetweenShots- GetWorld()->TimeSeconds,0.0f);
 
 	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true,0.0f);
+	
+	
 }
 
 void ASWeapon::StopFire()
@@ -83,63 +85,55 @@ void ASWeapon::Fire()
 
 	if (MyOwner)
 	{
-		ASCharacter* OwnerChar = Cast<ASCharacter>(MyOwner);
-		if (OwnerChar->GetLoadedAmmo() > 0)
+		FVector EyeLocation;
+		FRotator EyeRotation;
+
+
+		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+
+
+		FVector ShotDirection = EyeRotation.Vector();
+
+		FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
+
+
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(MyOwner);
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.bTraceComplex = true;
+
+		FVector TracerEndPoint = TraceEnd;
+
+		EPhysicalSurface SurfaceType = SurfaceType_Default;
+
+		FHitResult Hit;
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
 		{
-			if (OwnerChar)
-			{
-				OwnerChar->ReduceAmmoByOne();
-			}
-			FVector EyeLocation;
-			FRotator EyeRotation;
+			//Blocked hit
 
+			AActor* HitActor = Hit.GetActor();
+			UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(),
+				this, DamageType);
 
-			MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+			EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+			PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
+			PlayFireEffects(TracerEndPoint);
+		}
 
+		if (DebugWeaponDrawing > 0)
+		{
+			DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+		}
 
-			FVector ShotDirection = EyeRotation.Vector();
+		TracerEndPoint = Hit.ImpactPoint;
 
-			FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
+		LastFireTime = GetWorld()->TimeSeconds;
 
-
-			FCollisionQueryParams QueryParams;
-			QueryParams.AddIgnoredActor(MyOwner);
-			QueryParams.AddIgnoredActor(this);
-			QueryParams.bTraceComplex = true;
-
-			FVector TracerEndPoint = TraceEnd;
-
-			EPhysicalSurface SurfaceType = SurfaceType_Default;
-
-			FHitResult Hit;
-			if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
-			{
-				//Blocked hit
-
-				AActor* HitActor = Hit.GetActor();
-				UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(),
-					this, DamageType);
-
-				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
-				PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
-				PlayFireEffects(TracerEndPoint);
-			}
-
-			if (DebugWeaponDrawing > 0)
-			{
-				DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
-			}
-
-			TracerEndPoint = Hit.ImpactPoint;
-
-			LastFireTime = GetWorld()->TimeSeconds;
-
-			if (Role == ROLE_Authority)
-			{
-				HitScanTrace.TraceTo = TracerEndPoint;
-				HitScanTrace.SurfaceType = SurfaceType;
-				HitScanTrace.UniqueValue = UGameplayStatics::GetRealTimeSeconds(GetWorld());
-			}
+		if (Role == ROLE_Authority)
+		{
+			HitScanTrace.TraceTo = TracerEndPoint;
+			HitScanTrace.SurfaceType = SurfaceType;
+			HitScanTrace.UniqueValue = UGameplayStatics::GetRealTimeSeconds(GetWorld());
 		}
 	}
 

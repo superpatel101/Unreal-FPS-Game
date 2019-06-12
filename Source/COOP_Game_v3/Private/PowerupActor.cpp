@@ -26,8 +26,8 @@ void APowerupActor::OnTickPowerup()
 	OnPowerupTicked(TargetActor);
 
 	TicksCompleted++;
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TicksCompleted));
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TotalNumberOfTicks));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TicksCompleted));
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TotalNumberOfTicks));
 
 	if (TicksCompleted > TotalNumberOfTicks)
 	{
@@ -41,10 +41,10 @@ void APowerupActor::OnTickPowerup()
 		if (Role == ROLE_Authority)
 		{
 			Destroy(true);
-			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("should be deleted...."));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("should be deleted...."));
 		} else
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("NOT SERVER NOT be deleted...."));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("NOT SERVER NOT be deleted...."));
 		}
 	}
 }
