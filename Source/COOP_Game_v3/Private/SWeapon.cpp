@@ -13,6 +13,7 @@
 #include "UnrealNetwork.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "COOP_Game_v3.h"
+#include "Engine/Engine.h"
 #include "TimerManager.h"
 
 
@@ -38,7 +39,7 @@ ASWeapon::ASWeapon()
 
 	NetUpdateFrequency = 66.0f;
 	MinNetUpdateFrequency = 33.0f;
-	RateOfFire = 600;
+	//RateOfFire = 600;
 }
 
 void ASWeapon::BeginPlay()
@@ -66,6 +67,18 @@ void ASWeapon::StopFire()
 {
 	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBetweenShots);
 }
+
+void ASWeapon::SetFireRate(float FireRate)
+{
+	RateOfFire = FireRate;
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "HUHUHUHUH");
+}
+
+float ASWeapon::GetFireRate()
+{
+	return RateOfFire;
+}
+
 
 
 

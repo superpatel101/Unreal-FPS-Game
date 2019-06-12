@@ -83,6 +83,9 @@ protected:
 	int32 Secondary_LoadedAmmo;
 	int32 Secondary_AmmoPool;
 
+	float Primary_ZoomedFOV;
+	float Secondary_ZoomedFOV;
+
 	int32 LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
 	int32 AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
 

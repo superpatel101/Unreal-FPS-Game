@@ -46,8 +46,9 @@ ASCharacter::ASCharacter()
 
 	AmmoPoolsEach[0] = Primary_AmmoPool;
 	AmmoPoolsEach[1] = Secondary_AmmoPool;
-
-	ZoomedFOV = 65.0f;
+	Primary_ZoomedFOV = 65.0f;
+	Secondary_ZoomedFOV = 90.0f;
+	ZoomedFOV = Primary_ZoomedFOV;
 	ZoomInterpSpeed = 20;
 	OnMainWeapon = 1;
 
@@ -84,6 +85,7 @@ void ASCharacter::BeginPlay()
 			CurrentWeapon->SetOwner(this);
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		}
+		CurrentWeapon->SetFireRate(300);
 
 	} else
     {
@@ -168,6 +170,8 @@ void ASCharacter::SwitchWeapon()
 		AmmoPoolsEach[0] = AmmoPool;
 		LoadedAmmo = LoadedAmmosEach[1];
 		AmmoPool = AmmoPoolsEach[1];
+		ZoomedFOV = Secondary_ZoomedFOV;
+		CurrentWeapon->SetFireRate(600);
 	}
 	else {
 		OnMainWeapon = 1;
@@ -176,6 +180,8 @@ void ASCharacter::SwitchWeapon()
 		
 		LoadedAmmo = LoadedAmmosEach[0];
 		AmmoPool = AmmoPoolsEach[0];
+		ZoomedFOV = Primary_ZoomedFOV;
+		CurrentWeapon->SetFireRate(600);
 	}
 	if (OnMainWeapon == 1) {
 		CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
@@ -229,7 +235,10 @@ void ASCharacter::Tick(float DeltaTime)
 	float TargetFOV = bWantsToZoom ? ZoomedFOV : DefaultFOV;
 
 	float NewFOV = FMath::FInterpTo(CameraComp->FieldOfView, TargetFOV, DeltaTime, ZoomInterpSpeed);
+	CurrentWeapon->SetFireRate(300);
+	float num = CurrentWeapon->GetFireRate();
 
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("%f"),num));
 	CameraComp->SetFieldOfView(NewFOV);
 
 	 
