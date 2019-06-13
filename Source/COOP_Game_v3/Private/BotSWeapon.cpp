@@ -65,7 +65,7 @@ void ABotSWeapon::Fire()
 				//Blocked hit
 
 				AActor* HitActor = Hit.GetActor();
-				UGameplayStatics::ApplyPointDamage(HitActor, 20.0f, ShotDirection, Hit, MyOwner->GetInstigatorController(),
+				UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),
 					this, DamageType);
 
 				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());

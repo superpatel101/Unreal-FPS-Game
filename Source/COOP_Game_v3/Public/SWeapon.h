@@ -76,7 +76,10 @@ public:
 	UPROPERTY(ReplicatedUsing = OnRep_HitScanTrace)
 		FHitScanTrace HitScanTrace;
 
+	UFUNCTION(BlueprintCallable)
 	virtual void Fire();
+
+
 
 	FTimerHandle TimerHandle_TimeBetweenShots;
 

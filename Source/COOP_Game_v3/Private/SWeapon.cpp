@@ -151,6 +151,7 @@ void ASWeapon::Fire()
 				AActor* HitActor = Hit.GetActor();
 				UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),
 					this, DamageType);
+				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "It's Applying Damage");
 
 				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 				PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
