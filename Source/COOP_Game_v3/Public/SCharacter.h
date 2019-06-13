@@ -91,10 +91,10 @@ protected:
 		void ServerSwitchWeapon();
 
 	UPROPERTY(Replicated)
-		int32 LoadedAmmosEach[2] = { Primary_LoadedAmmo,Secondary_LoadedAmmo };
+		int32 LoadedAmmosEach[2];
 
 	UPROPERTY(Replicated)
-		int32 AmmoPoolsEach[2] = { Primary_AmmoPool, Secondary_AmmoPool };
+		int32 AmmoPoolsEach[2];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 		int32 OnMainWeapon;
