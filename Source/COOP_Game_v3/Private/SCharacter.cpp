@@ -15,6 +15,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "UnrealNetwork.h"
+#include "COOP_Game_v3.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -227,7 +228,7 @@ bool ASCharacter::ServerReload_Validate()
 	return true;
 }
 
-void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+void ASCharacter::OnHealthChanged(UHealthComponent* THealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (Health <= 0.0f && !bDied)
 	{
@@ -361,4 +362,12 @@ bool ASCharacter::ServerAddAmmo_Validate(int32 Amount)
 int32 ASCharacter::GetLoadedAmmo()
 {
 	return LoadedAmmo;
+}
+
+FString ASCharacter::GetTeamName() {
+    if (TeamNum == TEAM_RED) {
+        return FString(TEXT("Red Team"));
+    } else {
+        return FString(TEXT("Blue Team"));
+    }
 }

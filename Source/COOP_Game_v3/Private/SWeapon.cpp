@@ -153,8 +153,8 @@ void ASWeapon::Fire()
 					this, DamageType);
 				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "It's Applying Damage");
 
-				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
-				PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
+				EPhysicalSurface HitSurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+				PlayImpactEffects(HitSurfaceType, Hit.ImpactPoint);
 				PlayFireEffects(TracerEndPoint);
 			}
 

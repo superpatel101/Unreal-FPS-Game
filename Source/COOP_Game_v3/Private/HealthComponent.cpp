@@ -4,6 +4,7 @@
 #include "HealthComponent.h"
 #include "GameFramework/Actor.h"
 #include "Net/UnrealNetwork.h"
+#include "SCharacter.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -43,6 +44,17 @@ void UHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, c
 	{
 		return;
 	}
+    ASCharacter* DamagedPlayer = Cast<ASCharacter>(DamagedActor);
+    ASCharacter* DamageCauserPlayer = Cast<ASCharacter>(DamageCauser->GetOwner());
+
+    if (DamagedPlayer)
+    {
+        if (DamageCauserPlayer) {
+            if (DamagedPlayer->TeamNum == DamageCauserPlayer->TeamNum) {
+                return;
+            }
+        }
+    }
 
 	Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
 

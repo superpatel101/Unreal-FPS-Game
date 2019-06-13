@@ -68,8 +68,8 @@ void ABotSWeapon::Fire()
 				UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),
 					this, DamageType);
 
-				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
-				PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
+				EPhysicalSurface HitSurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+				PlayImpactEffects(HitSurfaceType, Hit.ImpactPoint);
 				PlayFireEffects(TracerEndPoint);
 			}
 			TracerEndPoint = Hit.ImpactPoint;

@@ -141,6 +141,9 @@ public:
 
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Health Component")
 		int32 TeamNum;
+    
+    UFUNCTION(BlueprintCallable)
+    FString GetTeamName();
 
 	bool IsFriendly(ASCharacter* A, ASCharacter* B)
 	{
