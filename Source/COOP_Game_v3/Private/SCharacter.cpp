@@ -15,11 +15,10 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "UnrealNetwork.h"
-<<<<<<< HEAD
+
 #include "COOP_Game_v3.h"
-=======
+
 #include "CTF_GameModeBase.h"
->>>>>>> b8bb097759534ea2de892ae213104be851fdc506
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -374,7 +373,7 @@ int32 ASCharacter::GetLoadedAmmo()
 	return LoadedAmmo;
 }
 
-<<<<<<< HEAD
+
 FString ASCharacter::GetTeamName() {
     if (TeamNum == TEAM_RED) {
         return FString(TEXT("Red Team"));
@@ -382,6 +381,3 @@ FString ASCharacter::GetTeamName() {
         return FString(TEXT("Blue Team"));
     }
 }
-=======
-
->>>>>>> b8bb097759534ea2de892ae213104be851fdc506
