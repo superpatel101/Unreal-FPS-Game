@@ -25,9 +25,9 @@ uint32 ABotCharacter::GetDecision()
 		return RETREAT;
 	}
 
-	AActor* Nearest = GetNearestOfClass();
+    AActor* Nearest = GetNearestOfClass(ASCharacter::StaticClass());
 
-	if(LoadedAmmo > 0)
+	if(LoadedAmmo > 0 && Nearest)
 	{
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(this);
@@ -194,17 +194,33 @@ AActor* ABotCharacter::GetNearestOfClass(UClass* Type)
 	{
 		if (FoundActors[i] != this && !Cast<ABotCharacter>(FoundActors[i]))
 		{
-			if (!Nearest)
-			{
-				Nearest = FoundActors[i];
-			}
-			float distOld = Nearest->GetDistanceTo(this);
-			float distNew = FoundActors[i]->GetDistanceTo(this);
 
-			if (distNew < distOld)
-			{
-				Nearest = FoundActors[i];
-			}
+            if (!Nearest)
+            {
+                ASCharacter* MaybeChar = Cast<ASCharacter>(FoundActors[i]);
+                if (MaybeChar) {
+                    if (MaybeChar->TeamNum != TeamNum) {
+                        Nearest = FoundActors[i];
+                    }
+                } else {
+                    Nearest = FoundActors[i];
+                }
+            }
+            if (Nearest) {
+                float distOld = Nearest->GetDistanceTo(this);
+                float distNew = FoundActors[i]->GetDistanceTo(this);
+                if (distNew < distOld)
+                {
+                    ASCharacter* MaybeChar = Cast<ASCharacter>(FoundActors[i]);
+                    if (MaybeChar) {
+                        if (MaybeChar->TeamNum != TeamNum) {
+                            Nearest = FoundActors[i];
+                        }
+                    } else {
+                        Nearest = FoundActors[i];
+                    }
+                }
+            }
 		}
 	}
 	return Nearest;

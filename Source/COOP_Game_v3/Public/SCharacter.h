@@ -40,6 +40,7 @@ protected:
 
 	void EndCrouch();
 
+    
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UCameraComponent* CameraComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -115,6 +116,8 @@ protected:
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Player")
 		bool bDied; //Died previously
+    
+
 
 public:
 	// Called every frame
@@ -141,6 +144,9 @@ public:
 
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Health Component")
 		int32 TeamNum;
+    
+    UFUNCTION(BlueprintCallable)
+    FString GetTeamName();
 
 	bool IsFriendly(ASCharacter* A, ASCharacter* B)
 	{

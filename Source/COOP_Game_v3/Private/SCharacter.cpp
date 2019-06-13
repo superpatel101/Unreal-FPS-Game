@@ -16,6 +16,10 @@
 #include "Components/SceneComponent.h"
 #include "UnrealNetwork.h"
 
+#include "COOP_Game_v3.h"
+
+#include "CTF_GameModeBase.h"
+
 // Sets default values
 ASCharacter::ASCharacter()
 {
@@ -227,7 +231,7 @@ bool ASCharacter::ServerReload_Validate()
 	return true;
 }
 
-void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+void ASCharacter::OnHealthChanged(UHealthComponent* THealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (Health <= 0.0f && !bDied)
 	{
@@ -239,11 +243,17 @@ void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Healt
 
 		DetachFromControllerPendingDestroy();
 
-		SetLifeSpan(10.0f);
+		SetLifeSpan(1.0f);
+        
+        
+        
 
 
 	}
 }
+
+
+
 
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
@@ -361,4 +371,13 @@ bool ASCharacter::ServerAddAmmo_Validate(int32 Amount)
 int32 ASCharacter::GetLoadedAmmo()
 {
 	return LoadedAmmo;
+}
+
+
+FString ASCharacter::GetTeamName() {
+    if (TeamNum == TEAM_RED) {
+        return FString(TEXT("Red Team"));
+    } else {
+        return FString(TEXT("Blue Team"));
+    }
 }

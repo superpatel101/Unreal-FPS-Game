@@ -153,10 +153,9 @@ void ASWeapon::Fire()//this function deals with firing for client and server
 				UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),
 					this, DamageType);//apply point damage to the actor (single bullet)
 				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "It's Applying Damage");
-
-				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
-				PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
-				PlayFireEffects(TracerEndPoint);//plays an effect where the bullet hits
+				EPhysicalSurface HitSurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+				PlayImpactEffects(HitSurfaceType, Hit.ImpactPoint);
+				PlayFireEffects(TracerEndPoint);
 			}
 
 			if (DebugWeaponDrawing > 0)

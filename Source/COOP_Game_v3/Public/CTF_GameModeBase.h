@@ -22,11 +22,20 @@ protected:
 	void CTFGameStart();
 
 	void CTFGameEnd();
+    
+    void RestartDeadPlayers();
+    
 
 public:
+    
+    ACTF_GameModeBase();
+    
 	virtual void StartPlay() override;
 
 	void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
 
 	void FlagCapture(uint8 TeamThatCapturedIt);
+    
+    virtual void Tick( float DeltaTime ) override;
+    
 };
