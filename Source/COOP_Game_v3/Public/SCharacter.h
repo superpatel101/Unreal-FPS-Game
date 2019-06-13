@@ -40,6 +40,7 @@ protected:
 
 	void EndCrouch();
 
+    
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UCameraComponent* CameraComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -115,6 +116,8 @@ protected:
 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Player")
 		bool bDied; //Died previously
+    
+
 
 public:
 	// Called every frame

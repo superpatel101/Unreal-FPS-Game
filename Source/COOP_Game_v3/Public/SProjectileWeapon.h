@@ -17,11 +17,19 @@ class COOP_GAME_V3_API ASProjectileWeapon : public ASWeapon
 protected:
 	void SpawnProjectile();
 
+
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSpawnProjectile();
 
-	virtual void Fire() override;
+	virtual void Fire() override;//this class uses Fire() differently than SWeapon
 
 	UPROPERTY(EditDefaultsOnly, Category = "ProjectileWeapon")
-	TSubclassOf<AActor> ProjectileClass;
+	TSubclassOf<AActor> ProjectileClass;//creates a field to assign a blueprint class to
+
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UParticleSystem* ExplosionEffect;
+
+
 };

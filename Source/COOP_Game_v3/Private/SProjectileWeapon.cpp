@@ -6,22 +6,22 @@
 #include "SCharacter.h"
 
 
-void ASProjectileWeapon::SpawnProjectile()
+void ASProjectileWeapon::SpawnProjectile()//when a projectile is shot, it spawns the actor
 {
-	if (Role == ROLE_Authority)
+	if (Role == ROLE_Authority)//server side
 	{
-		AActor* MyOwner = GetOwner();
-		if (MyOwner && ProjectileClass) {
-			ASCharacter* MyChar = Cast<ASCharacter>(MyOwner);
-			if (MyChar)
+		AActor* MyOwner = GetOwner();//gets the current actor
+		if (MyOwner && ProjectileClass) {//if there is an assigned projectile class and an owner
+			ASCharacter* MyChar = Cast<ASCharacter>(MyOwner);//we cast the owner object to an SCharacter object from our SCharacter class
+			if (MyChar)//if there is a character object
 			{
-				MyChar->ReduceAmmoByOne();
+				MyChar->ReduceAmmoByOne();//reduce ammo
 			}
-			FVector EyeLocation;
-			FRotator EyeRotation;
-			MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
+			FVector EyeLocation;//eyelocation vector
+			FRotator EyeRotation;//eye rotation vector
+			MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);//gets the viewpoint from the previous info
 
-			FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
+			FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);//gets the muzzlelocation vector
 			FRotator MuzzleRotation = MeshComp->GetSocketRotation(MuzzleSocketName);
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -49,7 +49,9 @@ bool ASProjectileWeapon::ServerSpawnProjectile_Validate()
 
 
 
-void ASProjectileWeapon::Fire() {
+
+
+void ASProjectileWeapon::Fire() {//this function is overrided from the SWeapon Fire() because this gun spawns an actual projectile
 	SpawnProjectile();
 }
 
