@@ -59,7 +59,6 @@ void ACTF_GameModeBase::FlagCapture(uint8 TeamThatCapturedIt)
 
 void ACTF_GameModeBase::RestartDeadPlayers()
 {
-    // Modify function to take in a reference of player controller (APlayerController*)
     UE_LOG(LogTemp, Warning, TEXT("should be respawning"));
 
     for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)//looping through player controllers
@@ -71,8 +70,9 @@ void ACTF_GameModeBase::RestartDeadPlayers()
             RestartPlayer(PC);
         }
     }
-    
 }
+
+
 
 void ACTF_GameModeBase::Tick( float DeltaTime )
 {

@@ -25,6 +25,7 @@ protected:
     
     void RestartDeadPlayers();
     
+
 public:
     
     ACTF_GameModeBase();
