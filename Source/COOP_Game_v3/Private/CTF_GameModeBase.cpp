@@ -6,6 +6,8 @@
 #include "TimerManager.h"
 #include "COOP_Game_v3.h"
 #include "CTF_GameStateBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "TeamBasedPlayerStart.h"
 
 ACTF_GameModeBase::ACTF_GameModeBase()
 {
@@ -80,4 +82,30 @@ void ACTF_GameModeBase::Tick( float DeltaTime )
     RestartDeadPlayers();
 
     
+}
+
+AActor* ACTF_GameModeBase::ChoosePlayerStart(AController* Player)
+{
+	TArray<AActor*> PlayerStarts;
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATeamBasedPlayerStart::StaticClass(), PlayerStarts);
+
+	for (int i = 0; i < PlayerStarts.Num(); i++)
+	{
+		ATeamBasedPlayerStart* Start = Cast<ATeamBasedPlayerStart>(PlayerStarts[i]);
+
+		if (Start)
+		{
+			ASCharacter* PlayerPawn = Cast<ASCharacter>(Player->GetCharacter());
+			if (PlayerPawn)
+			{
+				if (PlayerPawn->TeamNum == Start->GetTeamNum())
+				{
+					return Start;
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }

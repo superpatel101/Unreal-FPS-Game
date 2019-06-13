@@ -37,5 +37,7 @@ public:
 	void FlagCapture(uint8 TeamThatCapturedIt);
     
     virtual void Tick( float DeltaTime ) override;
+
+	virtual AActor* ChoosePlayerStart(AController* Player);
     
 };
