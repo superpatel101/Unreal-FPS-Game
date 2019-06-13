@@ -26,24 +26,24 @@ FAutoConsoleVariableRef CVarDebugWeaponDrawing(
 	ECVF_Cheat);
 
 
-// Sets default values
+// Sets default values - constructor
 ASWeapon::ASWeapon()
 {
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
-	RootComponent = MeshComp;
+	RootComponent = MeshComp;//we make the main mesh the MeshComp
 
-	MuzzleSocketName = "MuzzleSocket";
+	MuzzleSocketName = "MuzzleSocket";//In the UE4 editor we've assigned the end of the gun as the Muzzle Socket to allow animations to come from
 	TracerTargetName = "Target";
 	
 	SetReplicates(true);
 
 	NetUpdateFrequency = 66.0f;
 	MinNetUpdateFrequency = 33.0f;
-	BaseDamage = 10.0f;
+	BaseDamage = 10.0f;//base damage
 	//RateOfFire = 600;
 }
 
-void ASWeapon::BeginPlay()
+void ASWeapon::BeginPlay()//runs in the beginning of play once
 {
 	Super::BeginPlay();
 	TimeBetweenShots = 1/RateOfFire;
@@ -59,9 +59,9 @@ void ASWeapon::OnRep_HitScanTrace()
 
 void ASWeapon::StartFire()
 {
-	float FirstDelay = FMath::Max(LastFireTime +TimeBetweenShots- GetWorld()->TimeSeconds,0.0f);
-
-	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true,0.0f);
+	float FirstDelay = FMath::Max(LastFireTime +TimeBetweenShots- GetWorld()->TimeSeconds,0.0f);//this makes sure their is a minimum delay between two clicks for shots to happen
+	//the FirstDelay makes sure users can't spam click as that could be faster than the set firerate
+	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true,0.0f);//sets the delay
 }
 
 void ASWeapon::StopFire()
@@ -93,7 +93,7 @@ bool ASWeapon::ServerSetFireRate_Validate(float FireRate)
 
 
 
-float ASWeapon::GetFireRate()
+float ASWeapon::GetFireRate()//getter for firerate
 {
 	return RateOfFire;
 }
@@ -101,22 +101,22 @@ float ASWeapon::GetFireRate()
 
 
 
-void ASWeapon::Fire()
+void ASWeapon::Fire()//this function deals with firing for client and server
 {
 
-	if (Role < ROLE_Authority)
+	if (Role < ROLE_Authority)//if serverside
 	{
-		ServerFire();
+		ServerFire();//calls the server fire 
 	}
 	//Trace the world, from pawn eyes to crosshair location
-	AActor* MyOwner = GetOwner();
+	AActor* MyOwner = GetOwner();//otherwise we get the actor
 
 
 
 	if (MyOwner)
 	{
 		ASCharacter* OwnerChar = Cast<ASCharacter>(MyOwner);
-		if (OwnerChar->GetLoadedAmmo() > 0)
+		if (OwnerChar->GetLoadedAmmo() > 0)//if there is ammo for the user to use
 		{
 			if (OwnerChar)
 			{
@@ -129,33 +129,34 @@ void ASWeapon::Fire()
 			MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
 
-			FVector ShotDirection = EyeRotation.Vector();
+			FVector ShotDirection = EyeRotation.Vector();//the direction of the shot is just where the user is looking
 
-			FVector TraceEnd = EyeLocation + (ShotDirection * 10000);
+			FVector TraceEnd = EyeLocation + (ShotDirection * 10000);//for the line trace, we just make a very long vector which will cover the entire map so it reaches everything that it could aim
 
 
-			FCollisionQueryParams QueryParams;
+			FCollisionQueryParams QueryParams;//this object makes sure the bullet ignores collision with the gun itself and the player
 			QueryParams.AddIgnoredActor(MyOwner);
 			QueryParams.AddIgnoredActor(this);
 			QueryParams.bTraceComplex = true;
 
-			FVector TracerEndPoint = TraceEnd;
+			FVector TracerEndPoint = TraceEnd;//endpoint of traceend
 
 			EPhysicalSurface SurfaceType = SurfaceType_Default;
 
-			FHitResult Hit;
+			FHitResult Hit;//a variable that will hold the HitResult of the shot
+			//traces a ray against the worls and returns the first hit
 			if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
 			{
 				//Blocked hit
 
-				AActor* HitActor = Hit.GetActor();
+				AActor* HitActor = Hit.GetActor();//gets the actor of what was hit
 				UGameplayStatics::ApplyPointDamage(HitActor, BaseDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(),
-					this, DamageType);
+					this, DamageType);//apply point damage to the actor (single bullet)
 				GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "It's Applying Damage");
 
 				EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 				PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
-				PlayFireEffects(TracerEndPoint);
+				PlayFireEffects(TracerEndPoint);//plays an effect where the bullet hits
 			}
 
 			if (DebugWeaponDrawing > 0)
@@ -190,13 +191,13 @@ bool ASWeapon::ServerFire_Validate()
 
 
 
-void ASWeapon::PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint)
+void ASWeapon::PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint)//plays the impact effects
 {
 	UParticleSystem* SelectedEffect;
 	//switch (SurfaceType)
 	//{
 	//default:
-	SelectedEffect = MuzzleEffect;
+	SelectedEffect = MuzzleEffect;//we 
 	//}
 	if (SelectedEffect)
 	{
