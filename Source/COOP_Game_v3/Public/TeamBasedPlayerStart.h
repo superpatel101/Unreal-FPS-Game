@@ -13,5 +13,12 @@ UCLASS()
 class COOP_GAME_V3_API ATeamBasedPlayerStart : public APlayerStart
 {
 	GENERATED_BODY()
-	
+protected:
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly)
+		int32 TeamNum;
+public:
+	int32 GetTeamNum()
+	{
+		return TeamNum;
+	}
 };
