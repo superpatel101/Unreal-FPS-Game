@@ -27,7 +27,7 @@ uint32 ABotCharacter::GetDecision()
 
 	AActor* Nearest = GetNearestOfClass();
 
-	if(LoadedAmmo > 0)
+	if(LoadedAmmo > 0 && Nearest)
 	{
 		FCollisionQueryParams QueryParams;
 		QueryParams.AddIgnoredActor(this);

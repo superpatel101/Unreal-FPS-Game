@@ -7,7 +7,10 @@
 #include "COOP_Game_v3.h"
 #include "CTF_GameStateBase.h"
 
-
+ACTF_GameModeBase::ACTF_GameModeBase()
+{
+    PrimaryActorTick.bCanEverTick = true;
+}
 void ACTF_GameModeBase::CTFGameStart()
 {
 	GetWorldTimerManager().SetTimer(TimerHandle_GameEnd, this, &ACTF_GameModeBase::CTFGameEnd, GameDuration);
@@ -23,6 +26,8 @@ void ACTF_GameModeBase::StartPlay()
 	Super::StartPlay();
 
 }
+
+
 
 void ACTF_GameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
 {
@@ -50,4 +55,29 @@ void ACTF_GameModeBase::FlagCapture(uint8 TeamThatCapturedIt)
 		}
 	}
 
+}
+
+void ACTF_GameModeBase::RestartDeadPlayers()
+{
+    // Modify function to take in a reference of player controller (APlayerController*)
+    UE_LOG(LogTemp, Warning, TEXT("should be respawning"));
+
+    for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)//looping through player controllers
+    {
+        
+        APlayerController* PC = It->Get();
+        if(PC && PC->GetPawn() == nullptr)//if the pawn is a null pointer; checking if pawn is dead
+        {
+            RestartPlayer(PC);
+        }
+    }
+    
+}
+
+void ACTF_GameModeBase::Tick( float DeltaTime )
+{
+    Super::Tick( DeltaTime );
+    RestartDeadPlayers();
+
+    
 }

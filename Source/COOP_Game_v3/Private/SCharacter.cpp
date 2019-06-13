@@ -15,6 +15,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SceneComponent.h"
 #include "UnrealNetwork.h"
+#include "CTF_GameModeBase.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -239,11 +240,17 @@ void ASCharacter::OnHealthChanged(UHealthComponent* HealthComponent, float Healt
 
 		DetachFromControllerPendingDestroy();
 
-		SetLifeSpan(10.0f);
+		SetLifeSpan(1.0f);
+        
+        
+        
 
 
 	}
 }
+
+
+
 
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)
@@ -362,3 +369,5 @@ int32 ASCharacter::GetLoadedAmmo()
 {
 	return LoadedAmmo;
 }
+
+
