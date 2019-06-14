@@ -16,7 +16,7 @@ class COOP_GAME_V3_API ABotController : public AAIController
 {
 	GENERATED_BODY()
 public:
-    void Tick(float DeltaTime) override;
-    void BeginPlay() override;
-	AActor* GetNearestEnemy();
+    void Tick(float DeltaTime) override;//plays every frame
+    void BeginPlay() override;//plays at start
+	AActor* GetNearestEnemy();//function to get nearest enemy
 };

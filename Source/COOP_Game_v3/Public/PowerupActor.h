@@ -22,10 +22,10 @@ protected:
 	void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
-	float IntervalBetweenTicks;
+	float IntervalBetweenTicks;//just the time interval between ticks
 
 	UPROPERTY(EditDefaultsOnly, Category = "Powerups")
-	int32 TotalNumberOfTicks;
+	int32 TotalNumberOfTicks;//keeps track of total tick numbers
 
 	//Total # of ticks applied
 	int32 TicksCompleted;

@@ -27,7 +27,7 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetOwnerRole() == ROLE_Authority)
+	if (GetOwnerRole() == ROLE_Authority)//if it's on server
 	{
 
 		AActor* MyOwner = GetOwner();
@@ -41,17 +41,17 @@ void UHealthComponent::BeginPlay()
 
 
 void UHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
-{
-	if (Damage <= 0.0f)
+{//allows for damage to be handled
+	if (Damage <= 0.0f)//if there is damage
 	{
 		return;
 	}
     ASCharacter* DamagedPlayer = Cast<ASCharacter>(DamagedActor);//gets both players that attacked and got hurt
     ASCharacter* DamageCauserPlayer = Cast<ASCharacter>(DamageCauser->GetOwner());
 
-    if (DamagedPlayer)
+    if (DamagedPlayer)//if there is a player that got damaged
     {
-        if (DamageCauserPlayer) {
+        if (DamageCauserPlayer) {//and a player that damaged
             if (DamagedPlayer->TeamNum == DamageCauserPlayer->TeamNum) {//team members can't hurt each other
                 return;
             }
