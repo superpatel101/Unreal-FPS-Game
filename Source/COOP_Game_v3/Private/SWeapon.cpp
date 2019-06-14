@@ -1,6 +1,7 @@
 //SWeapon.cpp
 //2019-6-14
 //This class deals with the base weapon which is the rifle. 
+//James Xu, Feeda Elahresh, Aaryan Patel
 #include "../Public/SWeapon.h"
 #include "DrawDebugHelpers.h"
 #include "../Public/SCharacter.h"

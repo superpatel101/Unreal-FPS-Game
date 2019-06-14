@@ -1,5 +1,7 @@
 //HealthRegenActor.cpp
 //2019-6-14
+//This deals with the logic of the health powerup
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "HealthRegenActor.h"
 #include "Public/SCharacter.h"

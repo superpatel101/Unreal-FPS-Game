@@ -1,5 +1,7 @@
 //PickupActor.cpp
 //2019-6-14
+//This class deals with picking up powerups
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "Public/PickupActor.h"
 #include "Components/SphereComponent.h"

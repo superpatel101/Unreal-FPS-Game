@@ -1,7 +1,7 @@
 //SCharacter.cpp
 //2019-6-14
 //This is where the actual logic of the character is coded
-
+//James Xu, Feeda Elahresh, Aaryan Patel
 #include "SCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"

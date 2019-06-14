@@ -1,5 +1,7 @@
 //HealthComponent.cpp
 //2019-6-14
+//This class deals with the health component of players
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "HealthComponent.h"
 #include "GameFramework/Actor.h"

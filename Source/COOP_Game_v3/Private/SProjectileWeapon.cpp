@@ -1,6 +1,7 @@
 //SProjectileWeapon.cpp
 //2019-6-14
-
+//Deals with some of the logic of the grenade launcher, part of this weapon was built using blueprints in unreal engine
+//James Xu, Feeda Elahresh, Aaryan Patel
 #include "SProjectileWeapon.h"
 #include "Engine/Engine.h"
 #include "SCharacter.h"

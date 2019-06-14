@@ -1,5 +1,7 @@
 //CTFPickup.cpp
 //2019-6-14
+//This class deals with the picking up of the flag
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "CTFPickup.h"
 #include "CTF_Flag.h"

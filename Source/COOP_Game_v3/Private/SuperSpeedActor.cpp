@@ -1,6 +1,7 @@
 //SuperSpeedActor.cpp
 //2019-6-14
-
+//This deals with the logic when a player picks up a super speed powerup
+//James Xu, Feeda Elahresh, Aaryan Patel
 #include "SuperSpeedActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Public/SCharacter.h"

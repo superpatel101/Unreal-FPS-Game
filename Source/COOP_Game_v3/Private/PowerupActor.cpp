@@ -1,6 +1,7 @@
 //PowerupActor.cpp
 //2019-6-14
-
+//General class powerups are derived from
+////James Xu, Feeda Elahresh, Aaryan Patel
 #include "Public/PowerupActor.h"
 #include "TimerManager.h"
 #include "UnrealNetwork.h"
