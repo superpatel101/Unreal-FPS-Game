@@ -1,5 +1,7 @@
 //BotSWeapon.cpp
 //2019-6-14
+//Deals with all the weapon logic for the bot
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "BotSWeapon.h"
 #include "../Public/SWeapon.h"

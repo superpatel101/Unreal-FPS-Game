@@ -1,5 +1,7 @@
 //BotCharacter.cpp
 //2019-6-14
+//Deals with the logic of the character bot and brings associated classes together
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "BotCharacter.h"
 #include "Engine/Engine.h"

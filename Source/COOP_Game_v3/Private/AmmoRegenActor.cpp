@@ -1,5 +1,7 @@
 //AmmoRegenActor.cpp
 //2019-6-14
+//Deals with the logic of the ammo pack
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "AmmoRegenActor.h"
 #include "SCharacter.h"

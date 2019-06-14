@@ -1,5 +1,7 @@
 //BotController.cpp
 //2019-6-14
+//Deals with logic of the movement and control of the bot
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "BotController.h"
 #include "BotCharacter.h"

@@ -1,6 +1,7 @@
 //CTF_Flag.cpp
 //2019-6-14
-
+//Deals with the logic of the flag (suitcase)
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #include "CTF_Flag.h"
 #include "SCharacter.h"
