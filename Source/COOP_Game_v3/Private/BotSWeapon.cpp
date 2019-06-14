@@ -32,7 +32,7 @@ void ABotSWeapon::Fire()
 	if (MyOwner)
 	{
 		ABotCharacter* OwnerChar = Cast<ABotCharacter>(MyOwner);
-		if (OwnerChar->GetLoadedAmmo() > 0)
+		if (OwnerChar->GetLoadedAmmo() > 0)//if can shoot
 		{
 			if (OwnerChar)
 			{

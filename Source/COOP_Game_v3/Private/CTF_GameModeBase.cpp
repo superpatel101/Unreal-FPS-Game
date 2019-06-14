@@ -36,7 +36,7 @@ void ACTF_GameModeBase::StartPlay()
 
 
 
-void ACTF_GameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+void ACTF_GameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)//when a player joins
 {
 	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
 	ACTF_PlayerState* State = NewPlayer->GetPlayerState<ACTF_PlayerState>();
@@ -47,7 +47,7 @@ void ACTF_GameModeBase::HandleStartingNewPlayer_Implementation(APlayerController
 	if (ensure(State))
 	{
 
-		if (RedPlayerCount <= BluePlayerCount)
+		if (RedPlayerCount <= BluePlayerCount)//balancing teams
 		{
 			RedPlayerCount++;
 			State->TeamNum = TEAM_RED;

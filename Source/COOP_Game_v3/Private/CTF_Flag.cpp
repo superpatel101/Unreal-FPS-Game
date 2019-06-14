@@ -29,7 +29,7 @@ ACTF_Flag::ACTF_Flag()
 }
 
 // Called when the game starts or when spawned
-void ACTF_Flag::BeginPlay()
+void ACTF_Flag::BeginPlay()//starts the game mode
 {
 	Super::BeginPlay();
 	if (Role == ROLE_Authority)
