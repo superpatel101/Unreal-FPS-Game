@@ -1,5 +1,7 @@
 //PowerupActor.h
-
+//2019-6-14
+//Header file for the powerup class, will expose the PowerupActor.cpp class to unreal engine, which both powerups use 
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"
@@ -31,10 +33,10 @@ protected:
 	FTimerHandle TimerHandle_PowerupTick;
 
 	UFUNCTION()
-	void OnTickPowerup();
+	void OnTickPowerup();//
 
 	UPROPERTY(ReplicatedUsing=OnRep_PowerupActive)
-	bool bIsPowerupActive;
+	bool bIsPowerupActive;//boolean to show whether or not the user has powerup or not
 
 	UFUNCTION()
 		void OnRep_PowerupActive();

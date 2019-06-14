@@ -1,4 +1,5 @@
 //SCharacter.cpp
+//2019-6-14
 //This is where the actual logic of the character is coded
 
 #include "SCharacter.h"

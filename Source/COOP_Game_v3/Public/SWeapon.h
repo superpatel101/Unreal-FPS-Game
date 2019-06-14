@@ -1,4 +1,7 @@
 //SWeapon.h
+//2019-6-14
+//Header file for the base weapon class (rifle). This exposes the weapon to the unreal engine and initializes any classes, functions, or fields that'll be used
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #pragma once
 
@@ -6,7 +9,7 @@
 #include "GameFramework/Actor.h"
 #include "SWeapon.generated.h"
 
-class USkeletalMeshComponent;
+class USkeletalMeshComponent;//these are classes used
 
 class DamageType;
 class UParticleSystem;
@@ -20,7 +23,7 @@ struct FHitScanTrace
 
 public:
 
-	UPROPERTY()
+	UPROPERTY()//these are just fields that are made 
 		TEnumAsByte<EPhysicalSurface> SurfaceType;
 
 	UPROPERTY()
@@ -47,31 +50,30 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USkeletalMeshComponent* MeshComp;//just the mesh component parameter to pass in the gun mesh
 
-	void PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint);
-
-	void PlayFireEffects(FVector TraceEnd);
+	void PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint);//this will play impact affects where the bullet hits
+	void PlayFireEffects(FVector TraceEnd);//
 
 public:	
 	// Called every frame
 	// virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Weapon")
-	TSubclassOf<UDamageType> DamageType;
+	TSubclassOf<UDamageType> DamageType;//this is a field made to determine the damage type of the weapon, for the rifle it is a point damage
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Weapon")
-	FName MuzzleSocketName;
+	FName MuzzleSocketName;//this field will point to a socket on the gun mesh where the flash will attach to
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	FName TracerTargetName;
+	FName TracerTargetName;//target name, will determine if the thing the bullet hits is supposed to get damaged
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")//these 3 things just hold the effects for firing
+	UParticleSystem* MuzzleEffect;//flash at muzzle
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	UParticleSystem* MuzzleEffect;
+	UParticleSystem* ImpactEffect;//mini explosion/sparks on hit
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	UParticleSystem* ImpactEffect;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
-	UParticleSystem* TracerEffect;
+	UParticleSystem* TracerEffect;//smokey path
 
 	UPROPERTY(ReplicatedUsing = OnRep_HitScanTrace)
 		FHitScanTrace HitScanTrace;
@@ -103,7 +105,6 @@ public:
 
 public:
 	
-
 	void StartFire();
 	void StopFire();
 	void SetFireRate(float FireRate);

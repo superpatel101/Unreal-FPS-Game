@@ -1,5 +1,7 @@
 //BotController.h
-
+//2019-6-14
+//Header file for the movement of the bot
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"

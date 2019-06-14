@@ -1,8 +1,10 @@
 //PickupActor.h
-
+//2019-6-14
+//Header file for the pickups (powerups). The classes concerning the powerups dealt with the logic, this deals with the actual picking it up
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
-#include "CoreMinimal.h"
+#include "CoreMinimal.h"//imports used
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "PowerupActor.h"

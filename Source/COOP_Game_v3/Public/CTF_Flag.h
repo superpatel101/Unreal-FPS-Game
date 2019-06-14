@@ -1,5 +1,7 @@
 //CTF_Flag.h
-
+//2019-6-14
+//Header file for the capture the flag suitcase pickup, will keep track of whether the person has taken the flag and brought it to their team's side
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"

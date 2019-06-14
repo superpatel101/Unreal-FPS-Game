@@ -1,5 +1,7 @@
 //BotSWeapon.h
-
+//2019-6-14
+//Header file for the SWeapon class but for the bots
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"

@@ -1,5 +1,7 @@
 //CTF_GameStateBase.h
+//2019-6-14
 
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"

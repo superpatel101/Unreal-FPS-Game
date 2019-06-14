@@ -1,4 +1,7 @@
 //AmmoRegenActor.h
+//2019-6-14
+//Header file for the ammo refill powerup
+//James Xu, Feeda Elahresh, Aaryan Patel
 
 #pragma once
 

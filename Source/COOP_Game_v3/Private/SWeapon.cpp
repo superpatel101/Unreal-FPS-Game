@@ -1,5 +1,6 @@
 //SWeapon.cpp
-
+//2019-6-14
+//This class deals with the base weapon which is the rifle. 
 #include "../Public/SWeapon.h"
 #include "DrawDebugHelpers.h"
 #include "../Public/SCharacter.h"
@@ -17,7 +18,7 @@
 
 
 
-static int32 DebugWeaponDrawing = 0;
+static int32 DebugWeaponDrawing = 0;//default value for debug drawing, when set to >0 in terminal we see drawings of collisions used for debugging
 FAutoConsoleVariableRef CVarDebugWeaponDrawing(
 	TEXT("COOP.DebugWeapons"),
 	DebugWeaponDrawing,
@@ -28,11 +29,11 @@ FAutoConsoleVariableRef CVarDebugWeaponDrawing(
 // Sets default values - constructor
 ASWeapon::ASWeapon()
 {
-	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
+	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));//create a object from the MeshComp field filled in the engine editor
 	RootComponent = MeshComp;//we make the main mesh the MeshComp
 
 	MuzzleSocketName = "MuzzleSocket";//In the UE4 editor we've assigned the end of the gun as the Muzzle Socket to allow animations to come from
-	TracerTargetName = "Target";
+	TracerTargetName = "Target";//all things that can be hit have a target name of "Target"
 	
 	SetReplicates(true);//this actor does replicate to network clients
 
@@ -45,7 +46,7 @@ ASWeapon::ASWeapon()
 void ASWeapon::BeginPlay()//runs in the beginning of play once
 {
 	Super::BeginPlay();
-	TimeBetweenShots = 1/RateOfFire;
+	TimeBetweenShots = 1/RateOfFire;//rate of fire is shots/sec so time between shots is seconds/shot
 }
 
 
@@ -102,7 +103,7 @@ float ASWeapon::GetFireRate()//getter for firerate
 
 void ASWeapon::Fire()//this function deals with firing for client and server
 {
-
+	PlayFireEffects(HitScanTrace.TraceTo);
 	if (Role < ROLE_Authority)//if serverside
 	{
 		ServerFire();//calls the server fire 
@@ -112,18 +113,17 @@ void ASWeapon::Fire()//this function deals with firing for client and server
 
 
 
-	if (MyOwner)
+	if (MyOwner)//if the gun has an owner
 	{
-		ASCharacter* OwnerChar = Cast<ASCharacter>(MyOwner);
+		ASCharacter* OwnerChar = Cast<ASCharacter>(MyOwner);//converts the actor into a character object
 		if (OwnerChar->GetLoadedAmmo() > 0)//if there is ammo for the user to use
 		{
-			if (OwnerChar)
+			if (OwnerChar)//reduce the ammo when its being shot
 			{
 				OwnerChar->ReduceAmmoByOne();
 			}
-			FVector EyeLocation;
+			FVector EyeLocation;//gets where the player is looking
 			FRotator EyeRotation;
-
 
 			MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
@@ -157,9 +157,9 @@ void ASWeapon::Fire()//this function deals with firing for client and server
 				PlayFireEffects(TracerEndPoint);
 			}
 
-			if (DebugWeaponDrawing > 0)
+			if (DebugWeaponDrawing > 0)//if we set the value to show debug drawings
 			{
-				DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);
+				DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);//we see a line path of where the bullet goes
 			}
 
 			TracerEndPoint = Hit.ImpactPoint;

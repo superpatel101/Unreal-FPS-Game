@@ -1,5 +1,7 @@
 //HealthComponent.h
-
+//2019-6-14
+//Header file concerning the health component of the actors. Keeps track of health, damage, and any healing
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"

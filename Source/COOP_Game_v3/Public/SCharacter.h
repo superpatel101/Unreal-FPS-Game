@@ -1,6 +1,7 @@
 //SCharacter.h
+//2019-6-14
 //This is the header file for the SCharacter class, it initializes all variables, functions, and classes concerning the .cpp class of SCharacter
-
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"//all the imports

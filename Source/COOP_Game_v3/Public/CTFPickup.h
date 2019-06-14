@@ -1,5 +1,7 @@
 //CTFPickup.h
-
+//2019-6-14
+//Header file for the Capture the Flag pickup. 
+//James Xu, Feeda Elahresh, Aaryan Patel
 #pragma once
 
 #include "CoreMinimal.h"
