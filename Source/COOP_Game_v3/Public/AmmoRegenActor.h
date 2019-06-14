@@ -17,9 +17,7 @@ class COOP_GAME_V3_API AAmmoRegenActor : public APowerupActor
 {
 	GENERATED_BODY()
 private:
-	int32 AmmoAmount = 60;
+	int32 AmmoAmount = 60;//amount of ammo that it gives
 public:
-	// void OnPowerupTicked(AActor* OtherActor) override;
-	void OnActivated(AActor* OtherActor) override;
-	// void OnExpired(AActor* OtherActor) override;
+	void OnActivated(AActor* OtherActor) override;//function that deals with the logic of when the ammo pickup is activated
 };
