@@ -103,7 +103,7 @@ float ASWeapon::GetFireRate()//getter for firerate
 
 void ASWeapon::Fire()//this function deals with firing for client and server
 {
-	PlayFireEffects(HitScanTrace.TraceTo);
+	
 	if (Role < ROLE_Authority)//if serverside
 	{
 		ServerFire();//calls the server fire 
