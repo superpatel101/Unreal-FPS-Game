@@ -7,6 +7,7 @@
 #include "SCharacter.h"
 #include "Components/StaticMeshComponent.h"
 #include "CTFPickup.h"
+#include "CTF_PlayerState.h"
 #include "CTF_Flag.generated.h"
 
 class ASCharacter;

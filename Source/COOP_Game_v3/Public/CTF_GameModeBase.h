@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "CTF_PlayerState.h"
 #include "CTF_GameModeBase.generated.h"
 
 /**
@@ -24,6 +25,10 @@ protected:
 	void CTFGameEnd();
     
     void RestartDeadPlayers();
+
+	int32 RedPlayerCount;
+
+	int32 BluePlayerCount;
     
 
 public:
@@ -38,6 +43,10 @@ public:
     
     virtual void Tick( float DeltaTime ) override;
 
-	virtual AActor* ChoosePlayerStart(AController* Player);
-    
+	virtual AActor* ChoosePlayerStart(AController* Player);;
+
+	bool ShouldSpawnAtStartSpot(AController* Player) override
+	{
+		return false;
+	}
 };
