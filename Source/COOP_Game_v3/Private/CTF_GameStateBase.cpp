@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//CTF_GameStateBase.cpp
 
 #include "CTF_GameStateBase.h"
 #include "UnrealNetwork.h"

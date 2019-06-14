@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//BotCharacter.cpp
 
 #include "BotCharacter.h"
 #include "Engine/Engine.h"

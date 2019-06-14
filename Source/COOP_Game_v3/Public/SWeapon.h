@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+//SWeapon.h
 
 #pragma once
 
@@ -45,7 +45,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USkeletalMeshComponent* MeshComp;
+	USkeletalMeshComponent* MeshComp;//just the mesh component parameter to pass in the gun mesh
 
 	void PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint);
 

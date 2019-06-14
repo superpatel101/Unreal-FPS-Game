@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//CTFPickup.cpp
 
 #include "CTFPickup.h"
 #include "CTF_Flag.h"

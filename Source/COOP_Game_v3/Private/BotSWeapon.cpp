@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//BotSWeapon.cpp
 
 #include "BotSWeapon.h"
 #include "../Public/SWeapon.h"
