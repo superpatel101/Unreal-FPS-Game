@@ -17,7 +17,7 @@ class COOP_GAME_V3_API ABotSWeapon : public ASWeapon
 	GENERATED_BODY()
 
 protected:
-	void Fire() override;
+	void Fire() override;//overrides fire for the bot weapon
 
 	//Bullet spread in degrees
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin=0.0f))

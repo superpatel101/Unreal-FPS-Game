@@ -45,13 +45,13 @@ public:
 
 protected:
 	
-	virtual void BeginPlay() override;
+	virtual void BeginPlay() override;//plays at the beginning
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USkeletalMeshComponent* MeshComp;//just the mesh component parameter to pass in the gun mesh
 
 	void PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint);//this will play impact affects where the bullet hits
-	void PlayFireEffects(FVector TraceEnd);//
+	void PlayFireEffects(FVector TraceEnd);//function that plays all fire effects
 
 public:	
 	// Called every frame
@@ -99,7 +99,7 @@ public:
 		float BaseDamage;//field showing base damage of weapon
 
 	UFUNCTION()
-		void OnRep_HitScanTrace();
+		void OnRep_HitScanTrace();//it calls the function whenever hit scan trace changes
 
 	
 

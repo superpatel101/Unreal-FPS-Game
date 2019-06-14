@@ -20,8 +20,8 @@ public:
 private:
 	float speedMultiplier;//will hold the value of how much faster the player gets when they go over the powerup
 public:
-	void OnPowerupTicked(AActor* OtherActor) override;
-	void OnActivated(AActor* OtherActor) override;
-	void OnExpired(AActor* OtherActor) override;
+	void OnPowerupTicked(AActor* OtherActor) override;//just tick function for powerup on normal state
+	void OnActivated(AActor* OtherActor) override;//when active
+	void OnExpired(AActor* OtherActor) override;//when expire
 	
 };

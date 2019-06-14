@@ -16,11 +16,11 @@ class COOP_GAME_V3_API AHealthRegenActor : public APowerupActor
 {
 	GENERATED_BODY()
 public:
-	AHealthRegenActor();
+	AHealthRegenActor();//constructor
 private:
-	float regenPerTick;
+	float regenPerTick;//how much health is added per tick
 public:
-	void OnPowerupTicked(AActor* OtherActor) override;
-	void OnActivated(AActor* OtherActor) override;
-	void OnExpired(AActor* OtherActor) override;
+	void OnPowerupTicked(AActor* OtherActor) override;//tick function when it's on the powerup
+	void OnActivated(AActor* OtherActor) override;//when it's activated
+	void OnExpired(AActor* OtherActor) override;//and when it ends
 };

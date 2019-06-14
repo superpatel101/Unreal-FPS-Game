@@ -25,14 +25,14 @@ public:
 	// Sets default values for this actor's properties
 	ACTF_Flag();
 
-	void AttachFlagToPlayer(ASCharacter* Player);
+	void AttachFlagToPlayer(ASCharacter* Player);//function to attach flag to player
 
 	UFUNCTION(Server, Reliable, WithValidation)
-		void ServerAttachFlagToPlayer(ASCharacter* Player);
+		void ServerAttachFlagToPlayer(ASCharacter* Player);//server version
 
-	void Detach();
+	void Detach();//detach flag once destination is reached
 
-	UFUNCTION(Server, Reliable, WithValidation)
+	UFUNCTION(Server, Reliable, WithValidation)//server version
 		void ServerDetach();
 
 protected:
@@ -40,19 +40,19 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(Server, Reliable, WithValidation)
-		void ServerBeginPlay();
+		void ServerBeginPlay();//server version
 
-	UStaticMeshComponent* MeshComp;
+	UStaticMeshComponent* MeshComp;//mesh component for how the flag looks (suitcase)
 
 	UPROPERTY(Replicated)
-	ACTFPickup* Destination;
+	ACTFPickup* Destination;//object which shows where the destination is
 
-	void OnReachDest();
+	void OnReachDest();//function that handles the event when destination is reached
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(Replicated)
-	int32 TeamNum;
+	int32 TeamNum;//team number
 };

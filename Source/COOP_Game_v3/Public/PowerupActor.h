@@ -30,34 +30,32 @@ protected:
 	//Total # of ticks applied
 	int32 TicksCompleted;
 
-	FTimerHandle TimerHandle_PowerupTick;
+	FTimerHandle TimerHandle_PowerupTick;//handles the time for the power up to last
 
 	UFUNCTION()
-	void OnTickPowerup();//
+	void OnTickPowerup();//function that happens every frame keeping track of power up 
 
 	UPROPERTY(ReplicatedUsing=OnRep_PowerupActive)
 	bool bIsPowerupActive;//boolean to show whether or not the user has powerup or not
 
 	UFUNCTION()
-		void OnRep_PowerupActive();
+		void OnRep_PowerupActive();//when powerup is active function happens every tick
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	void OnPowerupStateChange(bool bNewIsActive);
+	void OnPowerupStateChange(bool bNewIsActive);//happens when powerup state changes
 
 	AActor* TargetActor;
 
 public:
 	
-	void ActivatePowerup(AActor* OtherActor);
+	void ActivatePowerup(AActor* OtherActor);//function that activates powerup for given actor
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;//gets the lifetime
 
-	// UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	virtual void OnPowerupTicked(AActor* OtherActor);
+	
+	virtual void OnPowerupTicked(AActor* OtherActor);//function when powerup is active
 
-	// UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	virtual void OnActivated(AActor* OtherActor);
+	virtual void OnActivated(AActor* OtherActor);//on activated 
 
-	// UFUNCTION(BlueprintImplementableEvent, Category = "Powerups")
-	virtual void OnExpired(AActor* OtherActor);
+	virtual void OnExpired(AActor* OtherActor);//on expired
 };

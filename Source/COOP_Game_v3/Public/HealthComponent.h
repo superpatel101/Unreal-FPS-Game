@@ -26,12 +26,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "HealthComponent")
-	float Health;
+	float Health;//health value for whichever actor
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HealthComponent")
-	float MaxHealth;
+	float MaxHealth;//maximum health to make sure when healed it doesn't have too much health
 
-	UFUNCTION()
+	UFUNCTION()//function that handles damage
 	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	
@@ -40,11 +40,12 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	//function that gets the liftime props
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-		FOnHealthChangedSignature OnHealthChanged;
-	float GetHealth();
+		FOnHealthChangedSignature OnHealthChanged;//value that keeps track of whether the health is changed or not
+	float GetHealth();//getter
 
-	void Heal(float amount);		
+	void Heal(float amount);//adds health
 };
