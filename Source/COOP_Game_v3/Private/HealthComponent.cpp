@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//HealthComponent.cpp
 
 #include "HealthComponent.h"
 #include "GameFramework/Actor.h"

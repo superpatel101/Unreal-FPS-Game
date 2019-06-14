@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+//CTF_Flag.cpp
 
 
 #include "CTF_Flag.h"

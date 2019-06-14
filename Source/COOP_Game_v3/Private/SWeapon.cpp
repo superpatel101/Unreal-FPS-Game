@@ -1,5 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//SWeapon.cpp
 
 #include "../Public/SWeapon.h"
 #include "DrawDebugHelpers.h"
@@ -35,7 +34,7 @@ ASWeapon::ASWeapon()
 	MuzzleSocketName = "MuzzleSocket";//In the UE4 editor we've assigned the end of the gun as the Muzzle Socket to allow animations to come from
 	TracerTargetName = "Target";
 	
-	SetReplicates(true);
+	SetReplicates(true);//this actor does replicate to network clients
 
 	NetUpdateFrequency = 66.0f;
 	MinNetUpdateFrequency = 33.0f;

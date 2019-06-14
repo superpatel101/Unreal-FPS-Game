@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+//SCharacter.h
+//This is the header file for the SCharacter class, it initializes all variables, functions, and classes concerning the .cpp class of SCharacter
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "CoreMinimal.h"//all the imports
 #include "GameFramework/Character.h"
 #include "Public/HealthComponent.h"
 #include "CTF_Flag.h"
@@ -10,13 +11,10 @@
 #include "SCharacter.generated.h"
 
 
-class UCameraComponent;
+class UCameraComponent;//classes used
 class USpringArmComponent;
-
 class ASWeapon;
-
 class UHealthComponent;
-
 class ACTF_Flag;
 
 UCLASS()
@@ -32,44 +30,38 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void MoveForward(float Value);
-
+	void MoveForward(float Value);//movement functions
 	void MoveRight(float Value);
-
 	void BeginCrouch();
-
 	void EndCrouch();
 
     
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")//a field unreal will use to assign a camera component
 		UCameraComponent* CameraComp;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")//spring arm component will also be used by unreal and will be used in junction with camera component for better third person viewing
 		USpringArmComponent* SpringArmComp;
 
-	bool bWantsToZoom;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Player")
-		float ZoomedFOV;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
-		float ZoomInterpSpeed;
-
-	float DefaultFOV;
-
-
-	void BeginZoom();
+	void BeginZoom();//functions concerning the player zooming in and out when aiming
 	void EndZoom();
+	float DefaultFOV;//this float holds the default field of vision
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+		float ZoomedFOV;//will hold the zoomed field of vision
+	UPROPERTY(EditDefaultsOnly, Category = "Player", meta = (ClampMin = 0.1, ClampMax = 100))
+		float ZoomInterpSpeed;//will hold how long it'll take to zoom
+	bool bWantsToZoom;//boolean to keep track of whether the user is trying to zoom or not
 
+	
 	UPROPERTY(Replicated)
-		ASWeapon* CurrentWeapon;
+		ASWeapon* CurrentWeapon;//weapon object field
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-		TSubclassOf<ASWeapon> StarterWeaponClass;
+		TSubclassOf<ASWeapon> StarterWeaponClass;//will take in a blueprint class on the engine side (primary)
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")//same as above but for secondary weapon
 		TSubclassOf<ASWeapon> SecondaryWeaponClass;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Player")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Player")//this holds the name of the socket where the weapon will attach to (socket on skeletal mesh of character)
 		FName WeaponAttachSocketName;
 
 	void StartFire();

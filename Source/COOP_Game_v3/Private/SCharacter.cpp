@@ -1,5 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+//SCharacter.cpp
+//This is where the actual logic of the character is coded
 
 #include "SCharacter.h"
 #include "Camera/CameraComponent.h"
