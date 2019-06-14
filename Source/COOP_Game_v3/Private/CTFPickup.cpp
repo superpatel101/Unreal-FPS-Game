@@ -6,6 +6,7 @@
 #include "SCharacter.h"
 #include "UnrealNetwork.h"
 #include "Engine/Engine.h"
+#include "CTF_PlayerState.h"
 
 // Sets default values
 ACTFPickup::ACTFPickup()

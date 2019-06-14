@@ -20,6 +20,8 @@
 
 #include "CTF_GameModeBase.h"
 
+#include "CTF_PlayerState.h"
+
 // Sets default values
 ASCharacter::ASCharacter()
 {
@@ -76,6 +78,8 @@ void ASCharacter::BeginPlay()
 	HealthComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	if (Role == ROLE_Authority)
 	{
+	
+
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		if (OnMainWeapon == 1) {
@@ -269,6 +273,16 @@ void ASCharacter::Tick(float DeltaTime)
 	// GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("%f"),num));
 	CameraComp->SetFieldOfView(NewFOV);
 
+	ACTF_PlayerState* PlayerState = Cast<ACTF_PlayerState>(GetPlayerState());
+	if (PlayerState)
+	{
+		TeamNum = PlayerState->TeamNum;
+		// UE_LOG(LogTemp, Warning, TEXT("SCharacter Team: %d"), TeamNum);
+	}
+	else
+	{
+		// UE_LOG(LogTemp, Error, TEXT("PLAYER STATE IS NULL!!"))
+	}
 	 
 
 }
@@ -377,7 +391,10 @@ int32 ASCharacter::GetLoadedAmmo()
 FString ASCharacter::GetTeamName() {
     if (TeamNum == TEAM_RED) {
         return FString(TEXT("Red Team"));
-    } else {
+    } else if (TeamNum == TEAM_BLUE) {
         return FString(TEXT("Blue Team"));
+    } else
+    {
+		return FString(TEXT("INVALID TEAM"));
     }
 }

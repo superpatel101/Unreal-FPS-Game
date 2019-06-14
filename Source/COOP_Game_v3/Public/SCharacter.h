@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Public/HealthComponent.h"
 #include "CTF_Flag.h"
+#include "CTF_PlayerState.h"
 
 #include "SCharacter.generated.h"
 
@@ -142,8 +143,8 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerAddAmmo(int32 Amount);
 
-	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Health Component")
-		int32 TeamNum;
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Health Component")
+		int32 TeamNum = -1;
     
     UFUNCTION(BlueprintCallable)
     FString GetTeamName();
