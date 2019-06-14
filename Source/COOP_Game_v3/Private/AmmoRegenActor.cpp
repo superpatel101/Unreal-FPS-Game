@@ -6,13 +6,13 @@
 #include "AmmoRegenActor.h"
 #include "SCharacter.h"
 
-void AAmmoRegenActor::OnActivated(AActor* OtherActor)
+void AAmmoRegenActor::OnActivated(AActor* OtherActor)//when activated
 {
 	Super::OnActivated(OtherActor);
 	ASCharacter* OwningChar = Cast<ASCharacter>(OtherActor);
 
-	if (OwningChar)
+	if (OwningChar)//if there is a character that went over the pack
 	{
-		OwningChar->AddAmmo(AmmoAmount);
+		OwningChar->AddAmmo(AmmoAmount);//we simply add ammo
 	}
 }

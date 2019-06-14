@@ -16,12 +16,12 @@ ACTFPickup::ACTFPickup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
-	SphereComp->SetSphereRadius(75.0f);
-	RootComponent = SphereComp;
+	SphereComp->SetSphereRadius(75.0f);//this is a collision radius for the flag to be picked up
+	RootComponent = SphereComp;//that becomes the root component
 
-	DecalComp = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComp"));
+	DecalComp = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComp"));//designs are attached to it 
 	DecalComp->SetupAttachment(RootComponent);
-	DecalComp->SetRelativeRotation(FRotator(90, 0.f, 0.f));
+	DecalComp->SetRelativeRotation(FRotator(90, 0.f, 0.f));//sets the design in the proper spot of the sphere
 	DecalComp->DecalSize = FVector(64, 75, 75);
 	SetReplicates(true);
 

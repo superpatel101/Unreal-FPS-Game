@@ -289,15 +289,16 @@ void ASCharacter::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)//this just sets up input and connects it with our functions
 {
+	//all these actions are bound to certain keys in unreal
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);//basic movement
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("LookUp", this, &ASCharacter::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Turn", this, &ASCharacter::AddControllerYawInput);
 
-	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ASCharacter::BeginCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ASCharacter::BeginCrouch);//various actions
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ASCharacter::EndCrouch);
 	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &ASCharacter::BeginZoom);
 	PlayerInputComponent->BindAction("Zoom", IE_Released, this, &ASCharacter::EndZoom);
@@ -314,10 +315,10 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 FVector ASCharacter::GetPawnViewLocation() const
 {
-	if (CameraComp) {
-		return CameraComp->GetComponentLocation();
+	if (CameraComp) {//if there is a camera component set up
+		return CameraComp->GetComponentLocation();//we just get the location
 	}
-	return Super::GetPawnViewLocation();
+	return Super::GetPawnViewLocation();//otherwise we return the player pawn's location
 	
 }
 
@@ -334,19 +335,19 @@ void ASCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	DOREPLIFETIME(ASCharacter, TeamNum);
 }
 
-void ASCharacter::ReduceAmmoByOne()
+void ASCharacter::ReduceAmmoByOne()//reduces ammo when necessary
 {
-	if (Role == ROLE_Authority)
+	if (Role == ROLE_Authority)//client side
 	{
 		LoadedAmmo--;
 	}
-	else
+	else//server side
 	{
 		ServerReduceAmmoByOne();
 	}
 }
 
-void ASCharacter::ServerReduceAmmoByOne_Implementation()
+void ASCharacter::ServerReduceAmmoByOne_Implementation()//reduces ammo on server side
 {
 	ReduceAmmoByOne();
 }
@@ -357,7 +358,7 @@ bool ASCharacter::ServerReduceAmmoByOne_Validate()
 }
 
 
-void ASCharacter::AddAmmo(int32 Amount)
+void ASCharacter::AddAmmo(int32 Amount)//adds ammo
 {
 	if (Role == ROLE_Authority)
 	{
@@ -384,13 +385,13 @@ bool ASCharacter::ServerAddAmmo_Validate(int32 Amount)
 
 
 
-int32 ASCharacter::GetLoadedAmmo()
+int32 ASCharacter::GetLoadedAmmo()//getter for loaded ammo
 {
 	return LoadedAmmo;
 }
 
 
-FString ASCharacter::GetTeamName() {
+FString ASCharacter::GetTeamName() {//getter for the team name
     if (TeamNum == TEAM_RED) {
         return FString(TEXT("Red Team"));
     } else if (TeamNum == TEAM_BLUE) {

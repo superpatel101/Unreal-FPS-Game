@@ -79,24 +79,24 @@ public:
 		FHitScanTrace HitScanTrace;
 
 	UFUNCTION(BlueprintCallable)
-	virtual void Fire();
+	virtual void Fire();//this function holds all logic of firing the gun
 
 
 
-	FTimerHandle TimerHandle_TimeBetweenShots;
+	FTimerHandle TimerHandle_TimeBetweenShots;//makes sure their is a certain amount of time between shots
 
-	float LastFireTime;
+	float LastFireTime;//value of last time a shot was fired
 
 	UPROPERTY(Replicated, EditDefaultsOnly, Category = "Weapon")
-	float RateOfFire;
+	float RateOfFire;//field that determines rate of fire (shown in unreal editor)
 
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerSetFireRate(float FireRate);
+	void ServerSetFireRate(float FireRate);//server version of above
 
-	float TimeBetweenShots;
+	float TimeBetweenShots;//initializes time between shots
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
-		float BaseDamage;
+		float BaseDamage;//field showing base damage of weapon
 
 	UFUNCTION()
 		void OnRep_HitScanTrace();
@@ -105,10 +105,10 @@ public:
 
 public:
 	
-	void StartFire();
-	void StopFire();
-	void SetFireRate(float FireRate);
-	float GetFireRate();
+	void StartFire();//when fire button is pressed
+	void StopFire();//when released
+	void SetFireRate(float FireRate);//setter for the fire rate
+	float GetFireRate();//getter
 
 	UFUNCTION(Server, Reliable, WithValidation)
 		void ServerFire();

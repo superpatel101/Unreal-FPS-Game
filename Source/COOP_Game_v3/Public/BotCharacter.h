@@ -21,7 +21,7 @@ protected:
     UFUNCTION(Server, Reliable, WithValidation)
     virtual void ServerBeginPlay();
     
-    float TimeLastFired;
+    float TimeLastFired;//keeps track of the time when it last fired
 
 	uint32 GetDecision();
 
