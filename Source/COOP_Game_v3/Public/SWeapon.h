@@ -110,7 +110,7 @@ public:
 	void SetFireRate(float FireRate);//setter for the fire rate
 	float GetFireRate();//getter
 
-	UFUNCTION(Server, Reliable, WithValidation)
+	UFUNCTION(Server, Reliable, WithValidation)//function that makes it if the actor doesn't have server authority this just runs on the server 
 		void ServerFire();
 
 };
