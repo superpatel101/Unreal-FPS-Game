@@ -170,45 +170,45 @@ void ASCharacter::Reload()
 		ServerReload();
 	}
 }
-void ASCharacter::SwitchWeapon()
+void ASCharacter::SwitchWeapon()//this function deals with switching weapons
 {
-	if (Role == ROLE_Authority)
+	if (Role == ROLE_Authority)//if on server
 	{
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		CurrentWeapon->Destroy();
-		if (OnMainWeapon == 1) {
-			OnMainWeapon = 2;
-			LoadedAmmosEach[0] = LoadedAmmo;
+		FActorSpawnParameters SpawnParams;//in built object type
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;//this just overrides collisions to make sure the next thing spawns
+		CurrentWeapon->Destroy();//destroys the current mesh
+		if (OnMainWeapon == 1) {//if on rifle
+			OnMainWeapon = 2;//it becomes grenade launcher
+			LoadedAmmosEach[0] = LoadedAmmo;//updates list with current loaded ammo and ammo pool
 			AmmoPoolsEach[0] = AmmoPool;
-			LoadedAmmo = LoadedAmmosEach[1];
+			LoadedAmmo = LoadedAmmosEach[1];//updates the loaded ammo and ammo pool to the grenade launcher one
 			AmmoPool = AmmoPoolsEach[1];
-			ZoomedFOV = Secondary_ZoomedFOV;
-			CurrentWeapon->SetFireRate(600);
+			ZoomedFOV = Secondary_ZoomedFOV;//updates zoomed fov to the fov value when grenade launcher is equipped
+			CurrentWeapon->SetFireRate(600);//sets the fire rate
 		}
-		else {
-			OnMainWeapon = 1;
-			LoadedAmmosEach[1] = LoadedAmmo;
+		else {//if on grenade launcher
+			OnMainWeapon = 1;//becomes rifle
+			LoadedAmmosEach[1] = LoadedAmmo;//updates the grenade launcher values in the list to be current
 			AmmoPoolsEach[1] = AmmoPool;
 
-			LoadedAmmo = LoadedAmmosEach[0];
+			LoadedAmmo = LoadedAmmosEach[0];//becomes the rifle values
 			AmmoPool = AmmoPoolsEach[0];
 			ZoomedFOV = Primary_ZoomedFOV;
 			CurrentWeapon->SetFireRate(600);
 		}
-		if (OnMainWeapon == 1) {
+		if (OnMainWeapon == 1) {//updates current weapon for rifle
 			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 		}
-		else {
+		else {//updates current weapon to grenade launcher
 			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(SecondaryWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 
 		}
-		if (CurrentWeapon) {
+		if (CurrentWeapon) {//once current weapon has been defined its owner is set and its attached to the mesh
 
 			CurrentWeapon->SetOwner(this);
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		}
-	} else
+	} else//if it doesn't have server authority it runs the code on the server
 	{
 		ServerSwitchWeapon();
 	}
