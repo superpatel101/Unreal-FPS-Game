@@ -10,11 +10,11 @@
 // Sets default values
 APickupActor::APickupActor()
 {
-	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));//creates a sphere for where the pickup is
 	SphereComp->SetSphereRadius(75.0f);
 	RootComponent = SphereComp;
 
-	DecalComp = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComp"));
+	DecalComp = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComp"));//design attachment and creation
 	DecalComp->SetupAttachment(RootComponent);
 	DecalComp->SetRelativeRotation(FRotator(90, 0.f, 0.f));
 	DecalComp->DecalSize = FVector(64, 75, 75);
@@ -32,7 +32,7 @@ void APickupActor::BeginPlay()
 	}
 }
 
-void APickupActor::Respawn()
+void APickupActor::Respawn()//respawns pickup after a while
 {
 	if (PowerUpClass == nullptr)
 	{
@@ -45,16 +45,16 @@ void APickupActor::Respawn()
 	PowerupInstance = GetWorld()->SpawnActor<APowerupActor>(PowerUpClass, GetTransform(), Params);
 }
 
-void APickupActor::NotifyActorBeginOverlap(AActor* OtherActor)
+void APickupActor::NotifyActorBeginOverlap(AActor* OtherActor)//notifies when actor is taken
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	if (Role == ROLE_Authority && PowerupInstance)
 	{
-		PowerupInstance->ActivatePowerup(OtherActor);
-		PowerupInstance = nullptr;
+		PowerupInstance->ActivatePowerup(OtherActor);//activated 
+		PowerupInstance = nullptr;//set to null because its used
 
-		GetWorldTimerManager().SetTimer(RespawnTimer, this, &APickupActor::Respawn, CoolDownDuration);
+		GetWorldTimerManager().SetTimer(RespawnTimer, this, &APickupActor::Respawn, CoolDownDuration);//time delay until powerup respawns
 	}
 }
 

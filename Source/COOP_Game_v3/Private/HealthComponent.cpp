@@ -33,10 +33,10 @@ void UHealthComponent::BeginPlay()
 		AActor* MyOwner = GetOwner();
 		if (MyOwner)
 		{
-			MyOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleTakeAnyDamage);
+			MyOwner->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleTakeAnyDamage);//adds dynamic to take damage
 		}
 	}
-	Health = MaxHealth;
+	Health = MaxHealth;//sets health to max at start
 }
 
 
@@ -46,35 +46,35 @@ void UHealthComponent::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, c
 	{
 		return;
 	}
-    ASCharacter* DamagedPlayer = Cast<ASCharacter>(DamagedActor);
+    ASCharacter* DamagedPlayer = Cast<ASCharacter>(DamagedActor);//gets both players that attacked and got hurt
     ASCharacter* DamageCauserPlayer = Cast<ASCharacter>(DamageCauser->GetOwner());
 
     if (DamagedPlayer)
     {
         if (DamageCauserPlayer) {
-            if (DamagedPlayer->TeamNum == DamageCauserPlayer->TeamNum) {
+            if (DamagedPlayer->TeamNum == DamageCauserPlayer->TeamNum) {//team members can't hurt each other
                 return;
             }
         }
     }
 
-	Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
+	Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);//gets the health after damage
 
 	UE_LOG(LogTemp, Log, TEXT("Health Changed: %s"), *FString::SanitizeFloat(Health));
 
-	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);
+	OnHealthChanged.Broadcast(this, Health, Damage, DamageType, InstigatedBy, DamageCauser);//sets it and updates
 }
 
-float UHealthComponent::GetHealth()
+float UHealthComponent::GetHealth()//getter for health
 {
 	return Health;
 }
 
-void UHealthComponent::Heal(float amount)
+void UHealthComponent::Heal(float amount)//heals
 {
 	if (amount > 0.f && Health > 0.f)
 	{
-		Health = FMath::Clamp(Health + amount, 0.0f, MaxHealth);
+		Health = FMath::Clamp(Health + amount, 0.0f, MaxHealth);//updates health by adding an amount to it
 	}
 }
 

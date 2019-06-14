@@ -22,14 +22,12 @@ void APowerupActor::BeginPlay()
 	Super::BeginPlay();
 }
 
-void APowerupActor::OnTickPowerup()
+void APowerupActor::OnTickPowerup()//when it's powered up
 {
 	OnPowerupTicked(TargetActor);
 
 	TicksCompleted++;
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TicksCompleted));
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::FromInt(TotalNumberOfTicks));
-
+	
 	if (TicksCompleted > TotalNumberOfTicks)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("expired"));
@@ -42,7 +40,6 @@ void APowerupActor::OnTickPowerup()
 		if (Role == ROLE_Authority)
 		{
 			Destroy(true);
-			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("should be deleted...."));
 		} else
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("NOT SERVER NOT be deleted...."));
@@ -50,17 +47,17 @@ void APowerupActor::OnTickPowerup()
 	}
 }
 
-void APowerupActor::OnRep_PowerupActive()
+void APowerupActor::OnRep_PowerupActive()//changes the state so the powerup is active or inactive
 {
 	OnPowerupStateChange(bIsPowerupActive);
 }
 
-void APowerupActor::ActivatePowerup(AActor* OtherActor)
+void APowerupActor::ActivatePowerup(AActor* OtherActor)//activates powerup
 {
-	TargetActor = OtherActor;
+	TargetActor = OtherActor;//target actor is whoever hits the powerup
 	OnActivated(OtherActor);
 
-	bIsPowerupActive = true;
+	bIsPowerupActive = true;//sets to true because its now active
 	OnRep_PowerupActive();
 	
 	// TimerDelegate.BindUFunction(this, FName("OnTickPowerup"), OtherActor);

@@ -17,13 +17,13 @@ void AHealthRegenActor::OnPowerupTicked(AActor* OtherActor)//when its on the pow
 {
 	Super::OnPowerupTicked(OtherActor);
 
-	ASCharacter* OtherPlayer = Cast<ASCharacter>(OtherActor);
+	ASCharacter* OtherPlayer = Cast<ASCharacter>(OtherActor);//cast the actor to character
 
 	if (OtherPlayer)
 	{
 		UHealthComponent* PlayerHealthComp = Cast<UHealthComponent>(OtherPlayer->GetComponentByClass(UHealthComponent::StaticClass()));
-
-		if (PlayerHealthComp)
+		//gets the health component
+		if (PlayerHealthComp)//heals it
 		{
 			PlayerHealthComp->Heal(regenPerTick);
 		}
@@ -32,10 +32,10 @@ void AHealthRegenActor::OnPowerupTicked(AActor* OtherActor)//when its on the pow
 
 void AHealthRegenActor::OnActivated(AActor* OtherActor)
 {
-	Super::OnActivated(OtherActor);
+	Super::OnActivated(OtherActor);//when activated
 }
 
 void AHealthRegenActor::OnExpired(AActor* OtherActor)
 {
-	Super::OnPowerupTicked(OtherActor);
+	Super::OnPowerupTicked(OtherActor);//when expired
 }
