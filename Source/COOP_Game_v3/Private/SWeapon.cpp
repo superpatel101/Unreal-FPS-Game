@@ -163,13 +163,13 @@ void ASWeapon::Fire()//this function deals with firing for client and server
 				DrawDebugLine(GetWorld(), EyeLocation, TraceEnd, FColor::Red, false, 1.0f, 0, 1.0f);//we see a line path of where the bullet goes
 			}
 
-			TracerEndPoint = Hit.ImpactPoint;
+			TracerEndPoint = Hit.ImpactPoint;//gets the end point for the tracer line
 
 			LastFireTime = GetWorld()->TimeSeconds;
 
 			if (Role == ROLE_Authority)
 			{
-				HitScanTrace.TraceTo = TracerEndPoint;
+				HitScanTrace.TraceTo = TracerEndPoint;//give the information to the HitScanTrace
 				HitScanTrace.SurfaceType = SurfaceType;
 				HitScanTrace.UniqueValue = UGameplayStatics::GetRealTimeSeconds(GetWorld());
 			}
@@ -178,7 +178,7 @@ void ASWeapon::Fire()//this function deals with firing for client and server
 
 }
 
-void ASWeapon::ServerFire_Implementation()
+void ASWeapon::ServerFire_Implementation()//fire function for the surver
 {
 	Fire();
 }
@@ -193,29 +193,26 @@ bool ASWeapon::ServerFire_Validate()
 void ASWeapon::PlayImpactEffects(EPhysicalSurface SurfaceType, FVector ImpactPoint)//plays the impact effects
 {
 	UParticleSystem* SelectedEffect;
-	//switch (SurfaceType)
-	//{
-	//default:
-	SelectedEffect = MuzzleEffect;//we 
-	//}
+	
+	SelectedEffect = MuzzleEffect;//Set the SelectedEffect to be some muzzle effect specified in unreal
 	if (SelectedEffect)
 	{
-		FVector ShotDirection = ImpactPoint - MeshComp->GetSocketLocation(MuzzleSocketName);
+		FVector ShotDirection = ImpactPoint - MeshComp->GetSocketLocation(MuzzleSocketName);//gets the shot direction
 		ShotDirection.Normalize();
 
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SelectedEffect, ImpactPoint, ShotDirection.Rotation());
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SelectedEffect, ImpactPoint, ShotDirection.Rotation());//plays the effect 
 	}
 }
 
-void ASWeapon::PlayFireEffects(FVector TraceEnd)
+void ASWeapon::PlayFireEffects(FVector TraceEnd)//plays the effects when the gun fires
 {
-	if (MuzzleEffect)
+	if (MuzzleEffect)//effect on the muzzle
 	{
 		UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComp, MuzzleSocketName);
 	}
 
 
-	if (TracerEffect)
+	if (TracerEffect)//effect on the bullet path
 	{
 		FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
 

@@ -9,7 +9,7 @@
 
 void ASProjectileWeapon::SpawnProjectile()//when a projectile is shot, it spawns the actor
 {
-	if (Role == ROLE_Authority)//server side
+	if (Role == ROLE_Authority)
 	{
 		AActor* MyOwner = GetOwner();//gets the current actor
 		if (MyOwner && ProjectileClass) {//if there is an assigned projectile class and an owner
@@ -28,10 +28,10 @@ void ASProjectileWeapon::SpawnProjectile()//when a projectile is shot, it spawns
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 
-			GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, EyeRotation, SpawnParams);
+			GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, EyeRotation, SpawnParams);//just spawns the projectile
 
 		}
-	} else
+	} else//if not client it'll spawn for server
 	{
 		ServerSpawnProjectile();
 	}

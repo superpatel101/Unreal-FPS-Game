@@ -40,33 +40,34 @@ ASCharacter::ASCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
-	Primary_LoadedAmmo=30;
-	Primary_AmmoPool=30;
-	Secondary_LoadedAmmo = 10;
+	Primary_LoadedAmmo=30;//this is the mag ammo default for rifle
+	Primary_AmmoPool=30;//ammo pool default for rifle
+	Secondary_LoadedAmmo = 10;//same as above but for the grenade launcher
 	Secondary_AmmoPool = 10;
 
-	LoadedAmmo = Primary_LoadedAmmo;
+	LoadedAmmo = Primary_LoadedAmmo;//by default the user is using the rifle so that's what the main variables will hold
 	AmmoPool = Primary_AmmoPool;
 	
-	LoadedAmmosEach[0] = Primary_LoadedAmmo;
+	LoadedAmmosEach[0] = Primary_LoadedAmmo;//sets the list values for loadedAmmosEach
 	LoadedAmmosEach[1] = Secondary_LoadedAmmo;
 
-	AmmoPoolsEach[0] = Primary_AmmoPool;
+	AmmoPoolsEach[0] = Primary_AmmoPool;//same as above but for AmmoPoolsEach
 	AmmoPoolsEach[1] = Secondary_AmmoPool;
-	Primary_ZoomedFOV = 65.0f;
-	Secondary_ZoomedFOV = 90.0f;
-	ZoomedFOV = Primary_ZoomedFOV;
-	ZoomInterpSpeed = 20;
-	OnMainWeapon = 1;
 
-	WeaponAttachSocketName = "WeaponSocket";
+	Primary_ZoomedFOV = 65.0f;//zoom amount for rifle
+	Secondary_ZoomedFOV = 90.0f;//zoome amount for grenade launcher
+	ZoomedFOV = Primary_ZoomedFOV;//default rifle
+	ZoomInterpSpeed = 20;//zoom speed
+	OnMainWeapon = 1;//checks if its on main weapon or not
 
-	FlagAttachSocketName = "FlagSocket";
+	WeaponAttachSocketName = "WeaponSocket";//character socket on right hand where weapon will attach
+
+	FlagAttachSocketName = "FlagSocket";//socket where flag will attach
 	
 
 
 
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));//health component object
 
 
 }
@@ -75,28 +76,27 @@ ASCharacter::ASCharacter()
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	DefaultFOV = CameraComp->FieldOfView;
+	DefaultFOV = CameraComp->FieldOfView;//gets the FOV
 	HealthComponent->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
 	if (Role == ROLE_Authority)
 	{
 	
-
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		if (OnMainWeapon == 1) {
+		if (OnMainWeapon == 1) {//if its supposed to be on rifle
 			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(StarterWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
+			//current weapon becomes the rifle which is the StarterWeaponClass in blueprints
 		}
-		else {
+		else {//same as above but for grenade launcher
 			CurrentWeapon = GetWorld()->SpawnActor<ASWeapon>(SecondaryWeaponClass, FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 
 		}
 		
-		if (CurrentWeapon) {
+		if (CurrentWeapon) {//if their is a current weapon we set the owner and attach to mesh
 
 			CurrentWeapon->SetOwner(this);
 			CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, WeaponAttachSocketName);
 		}
-		// CurrentWeapon->SetFireRate(300);
 
 	} else
     {
@@ -104,6 +104,7 @@ void ASCharacter::BeginPlay()
     }
 }
 
+//movement input
 void ASCharacter::MoveForward(float Value)
 {
 	AddMovementInput(GetActorForwardVector()*Value);
@@ -116,9 +117,8 @@ void ASCharacter::MoveRight(float Value)
 
 void ASCharacter::BeginCrouch()
 {
-	Crouch();
+	Crouch();//these are inbuilt functions
 }
-
 void ASCharacter::EndCrouch()
 {
 	UnCrouch();
@@ -126,7 +126,7 @@ void ASCharacter::EndCrouch()
 
 void ASCharacter::BeginZoom()
 {
-	bWantsToZoom = true;
+	bWantsToZoom = true;//keeps track of whether the character is trying to zoom or not
 }
 
 void ASCharacter::EndZoom()
@@ -138,13 +138,13 @@ void ASCharacter::StartFire()
 {
 	
 	if (CurrentWeapon) {
-		if (LoadedAmmo <= 0) {
+		if (LoadedAmmo <= 0) {//if no ammo StartFire doesn't happen
 			return;
 		}
-		CurrentWeapon->StartFire();
+		CurrentWeapon->StartFire();//otherwise we take the weapon object and do its startfire function 
 	}
 }
-void ASCharacter::StopFire()
+void ASCharacter::StopFire()//same idea as above 
 {
 	if (CurrentWeapon) {
 		CurrentWeapon->StopFire();

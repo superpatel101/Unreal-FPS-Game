@@ -44,5 +44,4 @@ void ASuperSpeedActor::OnExpired(AActor* OtherActor)//when the speed powerup is 
 void ASuperSpeedActor::OnPowerupTicked(AActor* OtherActor)
 {
 	Super::OnPowerupTicked(OtherActor);
-	//OtherActor->SetActorHiddenInGame(true);
 }
