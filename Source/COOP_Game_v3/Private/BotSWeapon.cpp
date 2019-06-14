@@ -19,11 +19,11 @@
 #include "TimerManager.h"
 #include "BotCharacter.h"
 
-void ABotSWeapon::Fire()
+void ABotSWeapon::Fire()//when bot weapon fired
 {
-	if (Role < ROLE_Authority)
+	if (Role < ROLE_Authority)//if it doesn't haver server authority
 	{
-		ServerFire();
+		ServerFire();//fires on server
 	}
 	//Trace the world, from pawn eyes to crosshair location
 	AActor* MyOwner = GetOwner();
@@ -31,12 +31,12 @@ void ABotSWeapon::Fire()
 
 	if (MyOwner)
 	{
-		ABotCharacter* OwnerChar = Cast<ABotCharacter>(MyOwner);
+		ABotCharacter* OwnerChar = Cast<ABotCharacter>(MyOwner);//converts actor to botcharacter
 		if (OwnerChar->GetLoadedAmmo() > 0)//if can shoot
 		{
 			if (OwnerChar)
 			{
-				OwnerChar->ReduceAmmoByOne();
+				OwnerChar->ReduceAmmoByOne();//when shot it reduces ammo
 			}
 
 

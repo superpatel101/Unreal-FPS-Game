@@ -28,7 +28,7 @@ void APickupActor::BeginPlay()
 
 	if (Role == ROLE_Authority)
 	{
-		Respawn();
+		Respawn();//everyone gets respawned at the beginning of the game
 	}
 }
 
