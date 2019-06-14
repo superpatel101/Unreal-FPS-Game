@@ -7,13 +7,13 @@
 #include "Public/SCharacter.h"
 #include "Public/HealthComponent.h"
 
-AHealthRegenActor::AHealthRegenActor()
+AHealthRegenActor::AHealthRegenActor()//constructor
 {
-	regenPerTick = 5;
+	regenPerTick = 5;//every frame 5 health will be added
 }
 
 
-void AHealthRegenActor::OnPowerupTicked(AActor* OtherActor)
+void AHealthRegenActor::OnPowerupTicked(AActor* OtherActor)//when its on the powerup
 {
 	Super::OnPowerupTicked(OtherActor);
 
